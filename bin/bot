@@ -1,0 +1,5 @@
+#!/bin/bash
+
+CURRENT_DIR=$(dirname $(readlink -f $0))
+
+php $CURRENT_DIR/bot.php
