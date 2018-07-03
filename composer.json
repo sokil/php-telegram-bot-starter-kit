@@ -6,7 +6,11 @@
         "symfony/console": "^4.1",
         "symfony/dotenv": "^4.1",
         "react/event-loop": "^0.5.2",
-        "longman/telegram-bot": "^0.53.0"
+        "longman/telegram-bot": "^0.53.0",
+        "symfony/dependency-injection": "^4.1",
+        "symfony/config": "^4.1",
+        "symfony/yaml": "^4.1",
+        "symfony/workflow": "^4.1"
     },
     "license": "MIT",
     "authors": [

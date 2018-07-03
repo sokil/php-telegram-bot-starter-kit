@@ -9,6 +9,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class RunCommand extends Command
 {
+    public static $defaultName = 'run';
+
     /**
      * Configures the current command.
      */

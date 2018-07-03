@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Celebrator\Command\:
+    resource: '../Command'
+
+  Longman\TelegramBot\Telegram:
+    class: Longman\TelegramBot\Telegram
+    arguments:
+      - '%env(TELEGRAM_BOT_TOKEN)%'
+      - '%env(TELEGRAM_BOT_USERNAME)%'
