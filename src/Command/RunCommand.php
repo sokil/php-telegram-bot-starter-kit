@@ -20,6 +20,9 @@ class RunCommand extends Command
     }
 
     /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
      * @return null|int null or 0 if everything went fine, or an error code
      *
      * @see setCode()
@@ -27,5 +30,7 @@ class RunCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Start bot');
+
+        return 0;
     }
 }
