@@ -1,0 +1,3 @@
+telegramWebHook:
+    path: /telegramWebHook
+    controller: Celebrator\Routes\TelegramWebHookController::list

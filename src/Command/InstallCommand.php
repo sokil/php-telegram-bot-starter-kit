@@ -19,13 +19,19 @@ class InstallCommand extends Command
     private $telegram;
 
     /**
+     * @var string
+     */
+    private $webHookUrl;
+
+    /**
      * @param Telegram $telegram
      */
-    public function __construct(Telegram $telegram)
+    public function __construct(Telegram $telegram, string $webHookUrl)
     {
         parent::__construct(null);
 
         $this->telegram = $telegram;
+        $this->webHookUrl = $webHookUrl;
     }
 
     /**
@@ -48,11 +54,9 @@ class InstallCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
-        $webHookUrl = getenv('TELEGRAM_BOT_WEBHOOK_URL');
-
         try {
             // Set web hook
-            $result = $this->telegram->setWebhook($webHookUrl);
+            $result = $this->telegram->setWebhook($this->webHookUrl);
             if ($result->isOk()) {
                 echo $result->getDescription();
             } else {

@@ -7,6 +7,18 @@ services:
   Celebrator\Command\:
     resource: '../Command'
 
+  Celebrator\Command\InstallCommand:
+    class: Celebrator\Command\InstallCommand
+    arguments:
+      - '@Longman\TelegramBot\Telegram'
+      - '%env(TELEGRAM_BOT_WEBHOOK_URL)%'
+
+  Celebrator\Command\RunCommand:
+    class: Celebrator\Command\RunCommand
+    arguments:
+      - '@Longman\TelegramBot\Telegram'
+      - '%env(HTTP_SERVER_PORT)%'
+
   Longman\TelegramBot\Telegram:
     class: Longman\TelegramBot\Telegram
     arguments:
