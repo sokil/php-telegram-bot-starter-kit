@@ -1,5 +1,5 @@
 {
-    "name": "celebrator/celebrator",
+    "name": "sokil/php-telegram-bot-starter-kit",
     "type": "project",
     "require": {
         "php": "^7.1",
