@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Sokil\TelegramBot\Command\:
+    resource: '../../Command'
+
+  Sokil\TelegramBot\Command\StartPushCommand:
+    class: Sokil\TelegramBot\Command\StartPushCommand
+    arguments:
+      - '@Longman\TelegramBot\Telegram'
+      - '@router'
+      - '%env(HTTP_SERVER_PORT)%'

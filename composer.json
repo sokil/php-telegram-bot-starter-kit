@@ -23,12 +23,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "Celebrator\\": "src/"
+            "Sokil\\TelegramBot\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Celebrator\\": "tests/"
+            "Sokil\\TelegramBot\\": "tests/"
         }
     }
 }

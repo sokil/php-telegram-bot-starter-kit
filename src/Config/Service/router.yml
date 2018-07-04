@@ -1,0 +1,36 @@
+parameters:
+  router.request_context.host: '%env(HTTP_HOSTNAME)%'
+  router.request_context.scheme: 'https'
+  router.request_context.base_url: ''
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  router.config_file_locator:
+    class: Symfony\Component\Config\FileLocator
+    arguments:
+      - ['%kernel.config_dir%']
+
+  router.config_file_loader:
+    class: Symfony\Component\Routing\Loader\YamlFileLoader
+    arguments:
+      - '@router.config_file_locator'
+
+  router.request_context:
+    class: Symfony\Component\Routing\RequestContext
+    arguments:
+      - '%router.request_context.base_url%'
+      - 'GET'
+      - '%router.request_context.host%'
+      - '%router.request_context.scheme%'
+
+  router:
+    class: Symfony\Component\Routing\Router
+    arguments:
+      - '@router.config_file_loader'
+      - 'routes.yml'
+      - {cache_dir: '%kernel.cache_dir%/'}
+      - '@router.request_context'

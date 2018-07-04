@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Celebrator\Route;
+namespace Sokil\TelegramBot\Route;
 
 class TelegramWebHookController
 {
