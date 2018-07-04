@@ -13,7 +13,6 @@ use React\Http\Server as ReactHttpServer;
 use React\Http\Response as ReactHttpResponse;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -69,22 +68,33 @@ class StartPushCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // build absolute URL to webhook
-        $telegramWebHookUrl = $this->router->generate('telegramWebHook', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        // set web hook
+        try {
+            // build absolute URL to webhook
+            $telegramWebHookUrl = $this->router->generate('telegramWebHook', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        // Set web hook
-        $result = $this->telegram->setWebhook($telegramWebHookUrl);
-        if ($result->isOk()) {
-            $output->writeln(sprintf('<info>%s</info>', $result->getDescription()));
-        } else {
-            $output->writeln(sprintf('<error>%s</error>', 'Unknown error'));
+            $result = $this->telegram->setWebhook($telegramWebHookUrl);
+            if ($result->isOk()) {
+                $output->writeln(sprintf('<info>%s</info>', $result->getDescription()));
+            } else {
+                throw new \RuntimeException('Unknown error');
+            }
+        } catch (\Throwable $e) {
+            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
             return 1;
+
         }
 
         // start server
         $loop = ReactEventLoopFactory::create();
 
-        $server = new ReactHttpServer(function (ServerRequestInterface $request) {
+        $server = new ReactHttpServer(function (ServerRequestInterface $request) use ($output) {
+            try {
+                $parameters = $this->router->match($request->getUri()->getPath());
+            } catch (\Throwable $e) {
+                $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+            }
+
             return new ReactHttpResponse(
                 200,
                 array('Content-Type' => 'text/plain'),
@@ -96,7 +106,7 @@ class StartPushCommand extends Command
         $server->listen($socket);
 
         $output->writeln(sprintf(
-            '<info>Bot listens web hooks at at http://127.0.0.1:%d',
+            '<info>Bot listens web hooks at http://127.0.0.1:%d',
             $this->httpServerPort
         ));
 
