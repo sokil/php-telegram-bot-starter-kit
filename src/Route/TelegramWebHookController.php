@@ -5,5 +5,8 @@ namespace Sokil\TelegramBot\Route;
 
 class TelegramWebHookController
 {
-
+    public function handle()
+    {
+        echo 'Hello';
+    }
 }

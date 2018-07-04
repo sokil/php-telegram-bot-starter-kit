@@ -91,15 +91,20 @@ class StartPushCommand extends Command
         $server = new ReactHttpServer(function (ServerRequestInterface $request) use ($output) {
             try {
                 $parameters = $this->router->match($request->getUri()->getPath());
+
+                call_user_func($parameters['_controller']);
             } catch (\Throwable $e) {
                 $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+                $output->writeln(sprintf('<error>%s</error>', $e->getTraceAsString()));
+
+                $response = new ReactHttpResponse(
+                    500,
+                    array('Content-Type' => 'text/plain'),
+                    'Route not found'
+                );
             }
 
-            return new ReactHttpResponse(
-                200,
-                array('Content-Type' => 'text/plain'),
-                $request->getUri()
-            );
+            return $response;
         });
 
         $socket = new ReactSocketServer($this->httpServerPort, $loop);
