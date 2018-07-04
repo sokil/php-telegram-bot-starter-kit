@@ -12,6 +12,8 @@ use React\Socket\Server as ReactSocketServer;
 use React\Http\Server as ReactHttpServer;
 use React\Http\Response as ReactHttpResponse;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -90,9 +92,24 @@ class StartPushCommand extends Command
 
         $server = new ReactHttpServer(function (ServerRequestInterface $request) use ($output) {
             try {
+                $routerContext = $this->router->getContext();
+                $routerContext->setMethod($request->getMethod());
+
                 $parameters = $this->router->match($request->getUri()->getPath());
 
                 call_user_func($parameters['_controller']);
+            } catch (MethodNotAllowedException $e) {
+                $response = new ReactHttpResponse(
+                    400,
+                    array('Content-Type' => 'text/plain'),
+                    'Bad method'
+                );
+            } catch (ResourceNotFoundException $e) {
+                $response = new ReactHttpResponse(
+                    404,
+                    array('Content-Type' => 'text/plain'),
+                    'Not found'
+                );
             } catch (\Throwable $e) {
                 $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
                 $output->writeln(sprintf('<error>%s</error>', $e->getTraceAsString()));
