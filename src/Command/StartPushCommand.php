@@ -100,7 +100,7 @@ class StartPushCommand extends Command
 
                 $parameters = $this->router->match($request->getUri()->getPath());
 
-                call_user_func($parameters['_controller']);
+                $response = call_user_func($parameters['_controller']);
             } catch (MethodNotAllowedException $e) {
                 $response = new ReactHttpResponse(
                     400,
