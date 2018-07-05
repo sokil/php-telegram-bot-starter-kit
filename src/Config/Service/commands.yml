@@ -10,6 +10,6 @@ services:
   Sokil\TelegramBot\Command\StartPushCommand:
     class: Sokil\TelegramBot\Command\StartPushCommand
     arguments:
-      - '@Longman\TelegramBot\Telegram'
+      - '@Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface'
       - '@router'
       - '%env(HTTP_SERVER_PORT)%'

@@ -4,6 +4,11 @@ services:
     autoconfigure: true
     public: false
 
+  Sokil\TelegramBot\Service\:
+    resource: '../../Service'
+
+  Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface: '@Sokil\TelegramBot\Service\TelegramBotClient\LongmanTelegramBotClient'
+
   Longman\TelegramBot\Telegram:
     class: Longman\TelegramBot\Telegram
     arguments:

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Command;
 
-use Longman\TelegramBot\Telegram;
+use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,7 +28,7 @@ class StartPushCommand extends Command
     public static $defaultName = 'start:push';
 
     /**
-     * @var Telegram
+     * @var TelegramBotClientInterface
      */
     private $telegram;
 
@@ -43,9 +43,11 @@ class StartPushCommand extends Command
     private $httpServerPort;
 
     /**
-     * @param Telegram $telegram
+     * @param TelegramBotClientInterface $telegram
+     * @param RouterInterface $router
+     * @param int $httpServerPort
      */
-    public function __construct(Telegram $telegram, RouterInterface $router, int $httpServerPort)
+    public function __construct(TelegramBotClientInterface $telegram, RouterInterface $router, int $httpServerPort)
     {
         parent::__construct(null);
 
@@ -70,36 +72,33 @@ class StartPushCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // set web hook
-        try {
-            // build absolute URL to webhook
-            // @todo: try to get absolite URL from request
-            $telegramWebHookUrl = $this->router->generate('telegramWebHook', [], UrlGeneratorInterface::ABSOLUTE_URL);
+        // build absolute URL to webhook
+        $telegramWebHookUrl = $this->router->generate('telegramWebHook', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-            $result = $this->telegram->setWebhook($telegramWebHookUrl);
-            if ($result->isOk()) {
-                $output->writeln(sprintf('<info>%s</info>', $result->getDescription()));
-            } else {
-                throw new \RuntimeException('Unknown error');
+        try {
+            // check if webhook configured
+            $webHookInfo = $this->telegram->getWebHookInfo();
+            if ($webHookInfo->getUrl() === null) {
+                // set web hook
+                $this->telegram->setWebhook($telegramWebHookUrl);
             }
+
         } catch (\Throwable $e) {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
             return 1;
-
         }
 
-        // start server
-        $loop = ReactEventLoopFactory::create();
-
+        // create HTTP server
         $server = new ReactHttpServer(function (ServerRequestInterface $request) use ($output) {
             try {
-                // @todo if host obtained from request, try to build context here instead of getting from services
-                // @see https://symfony.com/blog/psr-7-support-in-symfony-is-here
+                // apply request method to context
                 $routerContext = $this->router->getContext();
                 $routerContext->setMethod($request->getMethod());
 
+                // get route parameters
                 $parameters = $this->router->match($request->getUri()->getPath());
 
+                // call controller
                 $response = call_user_func($parameters['_controller']);
             } catch (MethodNotAllowedException $e) {
                 $response = new ReactHttpResponse(
@@ -127,9 +126,14 @@ class StartPushCommand extends Command
             return $response;
         });
 
+        // build event loop
+        $loop = ReactEventLoopFactory::create();
+
+        // create TCP server
         $socket = new ReactSocketServer($this->httpServerPort, $loop);
         $server->listen($socket);
 
+        // run bot
         $output->writeln(sprintf(
             '<info>Bot listens web hooks at http://127.0.0.1:%d',
             $this->httpServerPort

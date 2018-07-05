@@ -2,4 +2,4 @@ telegramWebHook:
     path: telegramWebHook
     controller: Sokil\TelegramBot\Route\TelegramWebHookController::handle
     methods:
-      - POST
+      - GET
