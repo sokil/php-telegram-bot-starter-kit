@@ -93,7 +93,8 @@ class StartPushCommand extends Command
 
         $server = new ReactHttpServer(function (ServerRequestInterface $request) use ($output) {
             try {
-                // @todo: if host obtained from request, try to build context here instead of getting from services
+                // @todo if host obtained from request, try to build context here instead of getting from services
+                // @see https://symfony.com/blog/psr-7-support-in-symfony-is-here
                 $routerContext = $this->router->getContext();
                 $routerContext->setMethod($request->getMethod());
 
