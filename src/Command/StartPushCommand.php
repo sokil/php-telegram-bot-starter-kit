@@ -73,6 +73,7 @@ class StartPushCommand extends Command
         // set web hook
         try {
             // build absolute URL to webhook
+            // @todo: try to get absolite URL from request
             $telegramWebHookUrl = $this->router->generate('telegramWebHook', [], UrlGeneratorInterface::ABSOLUTE_URL);
 
             $result = $this->telegram->setWebhook($telegramWebHookUrl);
@@ -92,6 +93,7 @@ class StartPushCommand extends Command
 
         $server = new ReactHttpServer(function (ServerRequestInterface $request) use ($output) {
             try {
+                // @todo: if host obtained from request, try to build context here instead of getting from services
                 $routerContext = $this->router->getContext();
                 $routerContext->setMethod($request->getMethod());
 
