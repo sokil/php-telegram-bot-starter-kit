@@ -29,11 +29,6 @@ class StartPullCommand extends Command
     private $telegram;
 
     /**
-     * @var int
-     */
-    private $httpServerPort;
-
-    /**
      * @param Telegram $telegram
      */
     public function __construct(Telegram $telegram)
