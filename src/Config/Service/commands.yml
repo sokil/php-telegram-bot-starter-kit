@@ -6,11 +6,3 @@ services:
 
   Sokil\TelegramBot\Command\:
     resource: '../../Command'
-
-  Sokil\TelegramBot\Command\StartPushCommand:
-    class: Sokil\TelegramBot\Command\StartPushCommand
-    arguments:
-      - '@Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface'
-      - '@router'
-      - '@request_handler.locator'
-      - '%env(HTTP_SERVER_PORT)%'

@@ -27,6 +27,8 @@ services:
       - '%router.request_context.host%'
       - '%router.request_context.scheme%'
 
+  Symfony\Component\Routing\RouterInterface: '@router'
+
   router:
     class: Symfony\Component\Routing\Router
     arguments:
@@ -41,6 +43,13 @@ services:
     arguments:
       -
         Sokil\TelegramBot\RequestHandler\TelegramWebHookRequestHandler: '@Sokil\TelegramBot\RequestHandler\TelegramWebHookRequestHandler'
+
+  Sokil\TelegramBot\Service\HttpServer\HttpServer:
+    class: Sokil\TelegramBot\Service\HttpServer\HttpServer
+    arguments:
+      - '@router'
+      - '@request_handler.locator'
+      - '%env(HTTP_SERVER_PORT)%'
 
   Sokil\TelegramBot\RequestHandler\:
     resource: '../../RequestHandler'
