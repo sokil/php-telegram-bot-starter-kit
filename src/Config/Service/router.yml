@@ -34,3 +34,13 @@ services:
       - 'routes.yml'
       - {cache_dir: '%kernel.cache_dir%/'}
       - '@router.request_context'
+
+  request_handler.locator:
+    class: Symfony\Component\DependencyInjection\ServiceLocator
+    tags: ['container.service_locator']
+    arguments:
+      -
+        Sokil\TelegramBot\RequestHandler\TelegramWebHookRequestHandler: '@Sokil\TelegramBot\RequestHandler\TelegramWebHookRequestHandler'
+
+  Sokil\TelegramBot\RequestHandler\:
+    resource: '../../RequestHandler'

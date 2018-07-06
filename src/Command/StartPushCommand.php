@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Command;
 
+use Psr\Http\Server\RequestHandlerInterface;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,6 +13,7 @@ use React\Socket\Server as ReactSocketServer;
 use React\Http\Server as ReactHttpServer;
 use React\Http\Response as ReactHttpResponse;
 use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -38,6 +40,11 @@ class StartPushCommand extends Command
     private $router;
 
     /**
+     * @var ServiceLocator
+     */
+    private $requestHandlerLocator;
+
+    /**
      * @var int
      */
     private $httpServerPort;
@@ -45,14 +52,20 @@ class StartPushCommand extends Command
     /**
      * @param TelegramBotClientInterface $telegram
      * @param RouterInterface $router
+     * @param ServiceLocator $requestHandlerLocator
      * @param int $httpServerPort
      */
-    public function __construct(TelegramBotClientInterface $telegram, RouterInterface $router, int $httpServerPort)
-    {
+    public function __construct(
+        TelegramBotClientInterface $telegram,
+        RouterInterface $router,
+        ServiceLocator $requestHandlerLocator,
+        int $httpServerPort
+    ) {
         parent::__construct(null);
 
         $this->telegram = $telegram;
         $this->router = $router;
+        $this->requestHandlerLocator = $requestHandlerLocator;
         $this->httpServerPort = $httpServerPort;
     }
 
@@ -98,8 +111,19 @@ class StartPushCommand extends Command
                 // get route parameters
                 $parameters = $this->router->match($request->getUri()->getPath());
 
-                // call controller
-                $response = call_user_func($parameters['_controller']);
+                // handle request
+                if (empty($parameters['_controller'])) {
+                    throw new \Exception(sprintf(sprintf('Request handler for route "%s" not specified', $parameters['_router'])));
+                }
+
+                if (!$this->requestHandlerLocator->has($parameters['_controller'])) {
+                    throw new ResourceNotFoundException(sprintf('Request handler "%" not configured', $parameters['_controller']));
+                }
+
+                /** @var RequestHandlerInterface $requestHandler */
+                $requestHandler = $this->requestHandlerLocator->get($parameters['_controller']);
+
+                $response = $requestHandler->handle($request);
             } catch (MethodNotAllowedException $e) {
                 $response = new ReactHttpResponse(
                     400,

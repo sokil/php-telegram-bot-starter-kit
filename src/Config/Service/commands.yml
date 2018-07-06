@@ -12,4 +12,5 @@ services:
     arguments:
       - '@Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface'
       - '@router'
+      - '@request_handler.locator'
       - '%env(HTTP_SERVER_PORT)%'
