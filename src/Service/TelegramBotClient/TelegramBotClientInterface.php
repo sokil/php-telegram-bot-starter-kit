@@ -37,4 +37,12 @@ interface TelegramBotClientInterface
      * @throws TelegramBotClientResponseException
      */
     public function getWebHookInfo(): WebhookInfo;
+
+    /**
+     * @throws TelegramBotClientRequestException
+     *
+     * @see https://core.telegram.org/bots/webhooks#testing-your-bot-with-updates Examples
+     * @see https://core.telegram.org/bots/api#update Specification
+     */
+    public function handleWebHook(): void;
 }

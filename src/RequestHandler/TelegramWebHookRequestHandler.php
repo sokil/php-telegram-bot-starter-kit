@@ -9,7 +9,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Response;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotClientRequestException;
-use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotClientResponseException;
 
 class TelegramWebHookRequestHandler implements RequestHandlerInterface
 {
@@ -19,7 +18,6 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
     private $telegramBotClient;
 
     /**
-     * TelegramWebHookController constructor.
      * @param TelegramBotClientInterface $telegramBotClient
      */
     public function __construct(TelegramBotClientInterface $telegramBotClient)
@@ -33,14 +31,15 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
      * @return ResponseInterface
      *
      * @throws TelegramBotClientRequestException
-     * @throws TelegramBotClientResponseException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $this->telegramBotClient->handleWebHook();
+
         return new Response(
             200,
             [],
-            $this->telegramBotClient->getWebHookInfo()->getUrl()
+            'OK'
         );
     }
 }

@@ -94,4 +94,16 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
 
         return $webHookInfo;
     }
+
+    /**
+     * @throws TelegramBotClientRequestException
+     */
+    public function handleWebHook(): void
+    {
+        try {
+            $input = Request::getInput();
+        } catch (\Throwable $e) {
+            throw new TelegramBotClientRequestException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
 }
