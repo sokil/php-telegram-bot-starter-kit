@@ -32,7 +32,7 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         try {
-            $update = $this->telegramBotClient->getWebHookUpdate();
+            $update = $this->telegramBotClient->buildWebHookUpdateFromRequest($request);
 
             // debug
             echo $update->getMessage()->getText();

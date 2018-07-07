@@ -7,6 +7,7 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Entities\Update as LongmanTelegramBotUpdate;
 use Longman\TelegramBot\Exception\TelegramException as LongmanTelegramBotException;
+use Psr\Http\Message\RequestInterface;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiRequestException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiResponseException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotServerRequestException;
@@ -101,17 +102,20 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
     }
 
     /**
+     * @param RequestInterface $request
+     *
      * @throws TelegramBotServerRequestException
+     *
+     * @return Update
      */
-    public function getWebHookUpdate(): Update
+    public function buildWebHookUpdateFromRequest(RequestInterface $request): Update
     {
         try {
-            $input = Request::getInput();
+            $input = $request->getBody()->getContents();
         } catch (\Throwable $e) {
             throw new TelegramBotServerRequestException($e->getMessage(), $e->getCode(), $e);
         }
 
-        echo 'll' . $input . 'kjh';
         $updateData = json_decode($input, true);
         if (empty($updateData)) {
             throw new TelegramBotServerRequestException('Invalid JSON');
