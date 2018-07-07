@@ -13,7 +13,8 @@
         "symfony/workflow": "^4.1",
         "react/http": "^0.8.3",
         "symfony/routing": "^4.1",
-        "psr/http-server-middleware": "^1.0"
+        "psr/http-server-middleware": "^1.0",
+        "sokil/php-state": "^0.5.2"
     },
     "license": "MIT",
     "authors": [

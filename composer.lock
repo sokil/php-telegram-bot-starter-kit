@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "94bf759f70482b6baf309ac8ae2555ed",
+    "content-hash": "ee161f96a63b4076907310a6b6ad6d7f",
     "packages": [
         {
             "name": "evenement/evenement",
@@ -1092,6 +1092,50 @@
                 "uri"
             ],
             "time": "2018-01-15T21:00:49+00:00"
+        },
+        {
+            "name": "sokil/php-state",
+            "version": "0.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sokil/php-state.git",
+                "reference": "fb3a84b48d56962d768abaec5c9fd571fa7b5cd4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sokil/php-state/zipball/fb3a84b48d56962d768abaec5c9fd571fa7b5cd4",
+                "reference": "fb3a84b48d56962d768abaec5c9fd571fa7b5cd4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*",
+                "satooshi/php-coveralls": "0.7.*",
+                "symfony/yaml": "2.*"
+            },
+            "suggest": {
+                "symfony/yaml": "YAML parser from Symfony"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sokil\\State\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmytro Sokil",
+                    "email": "dmytro.sokil@gmail.com"
+                }
+            ],
+            "description": "State machine",
+            "time": "2016-08-30T21:23:52+00:00"
         },
         {
             "name": "symfony/config",

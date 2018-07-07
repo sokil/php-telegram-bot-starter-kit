@@ -8,7 +8,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Response;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
-use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotClientRequestException;
 
 class TelegramWebHookRequestHandler implements RequestHandlerInterface
 {
@@ -29,17 +28,28 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
      * @param ServerRequestInterface $request
      *
      * @return ResponseInterface
-     *
-     * @throws TelegramBotClientRequestException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->telegramBotClient->handleWebHook();
+        try {
+            $update = $this->telegramBotClient->getWebHookUpdate();
 
-        return new Response(
-            200,
-            [],
-            'OK'
-        );
+            // debug
+            echo $update->getMessage()->getText();
+
+            // build response
+            return new Response(
+                200,
+                [],
+                $update->getMessage()->getText()
+            );
+        } catch (\Throwable $e) {
+            return new Response(
+                500,
+                [],
+                'Error accepting update: ' . $e->getMessage()
+            );
+        }
+
     }
 }

@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Service\TelegramBotClient;
 
-use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotClientRequestException;
-use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotClientResponseException;
+use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiRequestException;
+use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiResponseException;
+use Sokil\TelegramBot\Service\TelegramBotClient\Response\Update;
 use Sokil\TelegramBot\Service\TelegramBotClient\Response\WebHookInfo;
 
 interface TelegramBotClientInterface
@@ -12,8 +13,8 @@ interface TelegramBotClientInterface
     /**
      * @param string $url
      *
-     * @throws TelegramBotClientRequestException
-     * @throws TelegramBotClientResponseException
+     * @throws TelegramApiRequestException
+     * @throws TelegramApiResponseException
      */
     public function setWebHook(string $url): void;
 
@@ -23,8 +24,8 @@ interface TelegramBotClientInterface
      *
      * @see https://core.telegram.org/bots/api#deletewebhook
      *
-     * @throws TelegramBotClientRequestException
-     * @throws TelegramBotClientResponseException
+     * @throws TelegramApiRequestException
+     * @throws TelegramApiResponseException
      */
     public function deleteWebHook(): void;
 
@@ -33,16 +34,18 @@ interface TelegramBotClientInterface
      *
      * @return WebHookInfo
      *
-     * @throws TelegramBotClientRequestException
-     * @throws TelegramBotClientResponseException
+     * @throws TelegramApiRequestException
+     * @throws TelegramApiResponseException
      */
     public function getWebHookInfo(): WebhookInfo;
 
     /**
-     * @throws TelegramBotClientRequestException
+     * @throws TelegramApiRequestException
+     *
+     * @return Update
      *
      * @see https://core.telegram.org/bots/webhooks#testing-your-bot-with-updates Examples
      * @see https://core.telegram.org/bots/api#update Specification
      */
-    public function handleWebHook(): void;
+    public function getWebHookUpdate(): Update;
 }

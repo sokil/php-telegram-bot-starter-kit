@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Service\TelegramBotClient\Response;
+
 use Sokil\TelegramBot\Service\TelegramBotClient\Response\Update\Message;
 
 /**

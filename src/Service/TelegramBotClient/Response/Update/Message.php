@@ -22,4 +22,12 @@ class Message
         $this->text = $text;
     }
 
+    /**
+     * @return string
+     */
+    public function getText(): string
+    {
+        return $this->text;
+    }
+
 }

@@ -5,8 +5,13 @@ namespace Sokil\TelegramBot\Service\TelegramBotClient;
 
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
-use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotClientRequestException;
-use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotClientResponseException;
+use Longman\TelegramBot\Entities\Update as LongmanTelegramBotUpdate;
+use Longman\TelegramBot\Exception\TelegramException as LongmanTelegramBotException;
+use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiRequestException;
+use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiResponseException;
+use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotServerRequestException;
+use Sokil\TelegramBot\Service\TelegramBotClient\Response\Update;
+use Sokil\TelegramBot\Service\TelegramBotClient\Response\Update\Message;
 use Sokil\TelegramBot\Service\TelegramBotClient\Response\WebHookInfo;
 
 /**
@@ -32,8 +37,8 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
     /**
      * @param string $url
      *
-     * @throws TelegramBotClientRequestException
-     * @throws TelegramBotClientResponseException
+     * @throws TelegramApiRequestException
+     * @throws TelegramApiResponseException
      */
     public function setWebHook(string $url): void
     {
@@ -42,47 +47,47 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
                 'url' => $url,
             ]);
         } catch (\Throwable $e) {
-            throw new TelegramBotClientRequestException($e->getMessage(), $e->getCode(), $e);
+            throw new TelegramApiRequestException($e->getMessage(), $e->getCode(), $e);
         }
 
         if (!$response->isOk()) {
-            throw new TelegramBotClientResponseException($response->getDescription());
+            throw new TelegramApiResponseException($response->getDescription());
         }
     }
 
     /**
-     * @throws TelegramBotClientRequestException
-     * @throws TelegramBotClientResponseException
+     * @throws TelegramApiRequestException
+     * @throws TelegramApiResponseException
      */
     public function deleteWebHook(): void
     {
         try {
             $response = Request::deleteWebhook();
         } catch (\Throwable $e) {
-            throw new TelegramBotClientRequestException($e->getMessage(), $e->getCode(), $e);
+            throw new TelegramApiRequestException($e->getMessage(), $e->getCode(), $e);
         }
 
         if (!$response->isOk()) {
-            throw new TelegramBotClientResponseException($response->getDescription());
+            throw new TelegramApiResponseException($response->getDescription());
         }
     }
 
     /**
      * @return WebHookInfo
      *
-     * @throws TelegramBotClientRequestException
-     * @throws TelegramBotClientResponseException
+     * @throws TelegramApiRequestException
+     * @throws TelegramApiResponseException
      */
     public function getWebHookInfo(): WebhookInfo
     {
         try {
             $response = Request::getWebhookInfo();
         } catch (\Throwable $e) {
-            throw new TelegramBotClientRequestException($e->getMessage(), $e->getCode(), $e);
+            throw new TelegramApiRequestException($e->getMessage(), $e->getCode(), $e);
         }
 
         if (!$response->isOk()) {
-            throw new TelegramBotClientResponseException($response->getDescription());
+            throw new TelegramApiResponseException($response->getDescription());
         }
 
         /** @var \Longman\TelegramBot\Entities\WebhookInfo $result */
@@ -96,14 +101,30 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
     }
 
     /**
-     * @throws TelegramBotClientRequestException
+     * @throws TelegramBotServerRequestException
      */
-    public function handleWebHook(): void
+    public function getWebHookUpdate(): Update
     {
         try {
             $input = Request::getInput();
         } catch (\Throwable $e) {
-            throw new TelegramBotClientRequestException($e->getMessage(), $e->getCode(), $e);
+            throw new TelegramBotServerRequestException($e->getMessage(), $e->getCode(), $e);
         }
+
+        echo 'll' . $input . 'kjh';
+        $updateData = json_decode($input, true);
+        if (empty($updateData)) {
+            throw new TelegramBotServerRequestException('Invalid JSON');
+        }
+
+        try {
+            $update = new LongmanTelegramBotUpdate($updateData);
+        } catch (LongmanTelegramBotException $e) {
+            throw new TelegramBotServerRequestException('Can not create Update object');
+        }
+
+        return new Update(
+            new Message($update->getUpdateContent()->getText())
+        );
     }
 }
