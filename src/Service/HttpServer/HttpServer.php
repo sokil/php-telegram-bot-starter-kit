@@ -63,7 +63,7 @@ class HttpServer
 
                 // handle request
                 if (empty($parameters['_controller'])) {
-                    throw new \Exception(sprintf(sprintf('Request handler for route "%s" not specified', $parameters['_router'])));
+                    throw new \Exception(sprintf('Request handler for route "%s" not specified', $parameters['_router']));
                 }
 
                 if (!$this->requestHandlerLocator->has($parameters['_controller'])) {
