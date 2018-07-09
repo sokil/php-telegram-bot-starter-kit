@@ -12,7 +12,7 @@ use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiRequestExce
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiResponseException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotServerRequestException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Response\Update;
-use Sokil\TelegramBot\Service\TelegramBotClient\Response\Update\Message;
+use Sokil\TelegramBot\Service\TelegramBotClient\Response\Message;
 use Sokil\TelegramBot\Service\TelegramBotClient\Response\WebHookInfo;
 
 /**
@@ -130,5 +130,16 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
         return new Update(
             new Message($update->getUpdateContent()->getText())
         );
+    }
+
+    /**
+     * @param string $chatId
+     * @param string $text
+     *
+     * @return Message
+     */
+    public function sendMessage(string $chatId, string $text): Message
+    {
+
     }
 }

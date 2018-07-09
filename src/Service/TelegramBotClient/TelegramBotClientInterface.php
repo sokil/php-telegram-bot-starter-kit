@@ -6,6 +6,7 @@ namespace Sokil\TelegramBot\Service\TelegramBotClient;
 use Psr\Http\Message\RequestInterface;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiRequestException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiResponseException;
+use Sokil\TelegramBot\Service\TelegramBotClient\Response\Message;
 use Sokil\TelegramBot\Service\TelegramBotClient\Response\Update;
 use Sokil\TelegramBot\Service\TelegramBotClient\Response\WebHookInfo;
 
@@ -51,4 +52,14 @@ interface TelegramBotClientInterface
      * @see https://core.telegram.org/bots/api#update Specification
      */
     public function buildWebHookUpdateFromRequest(RequestInterface $request): Update;
+
+    /**
+     * @link https://core.telegram.org/bots/api#sendmessage
+     *
+     * @param string $chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+     * @param string $text Text of the message to be sent
+     *
+     * @return Message
+     */
+    public function sendMessage(string $chatId, string $text): Message;
 }

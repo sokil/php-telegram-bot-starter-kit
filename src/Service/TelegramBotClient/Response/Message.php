@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokil\TelegramBot\Service\TelegramBotClient\Response\Update;
+namespace Sokil\TelegramBot\Service\TelegramBotClient\Response;
 
 /**
  * @see https://core.telegram.org/bots/api#message
