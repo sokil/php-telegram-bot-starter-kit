@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Sokil\TelegramBot\Application;
+use Sokil\TelegramBot\Console\Application;
 
 // define root of project
 $projectDir = realpath(__DIR__ . '/../');

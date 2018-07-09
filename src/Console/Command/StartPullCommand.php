@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokil\TelegramBot\Command;
+namespace Sokil\TelegramBot\Console\Command;
 
 use Longman\TelegramBot\Telegram;
 use Symfony\Component\Console\Command\Command;

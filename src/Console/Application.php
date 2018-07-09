@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokil\TelegramBot;
+namespace Sokil\TelegramBot\Console;
 
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Dotenv\Dotenv;
@@ -92,7 +92,7 @@ class Application
             // load services from config
             $serviceConfigLoader = new YamlFileLoader(
                 $containerBuilder,
-                new FileLocator(__DIR__ . '/../src/Config/Service')
+                new FileLocator($this->projectDir . '/src/Config/Service')
             );
 
             $serviceConfigLoader->load('common.yml');

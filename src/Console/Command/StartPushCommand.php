@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokil\TelegramBot\Command;
+namespace Sokil\TelegramBot\Console\Command;
 
 use Sokil\TelegramBot\Service\HttpServer\HttpServer;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;

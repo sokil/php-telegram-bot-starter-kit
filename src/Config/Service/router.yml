@@ -42,7 +42,7 @@ services:
     tags: ['container.service_locator']
     arguments:
       -
-        Sokil\TelegramBot\RequestHandler\TelegramWebHookRequestHandler: '@Sokil\TelegramBot\RequestHandler\TelegramWebHookRequestHandler'
+        Sokil\TelegramBot\HttpRequestHandler\TelegramWebHookRequestHandler: '@Sokil\TelegramBot\HttpRequestHandler\TelegramWebHookRequestHandler'
 
   Sokil\TelegramBot\Service\HttpServer\HttpServer:
     class: Sokil\TelegramBot\Service\HttpServer\HttpServer
@@ -51,5 +51,5 @@ services:
       - '@request_handler.locator'
       - '%env(HTTP_SERVER_PORT)%'
 
-  Sokil\TelegramBot\RequestHandler\:
-    resource: '../../RequestHandler'
+  Sokil\TelegramBot\HttpRequestHandler\:
+    resource: '../../HttpRequestHandler'
