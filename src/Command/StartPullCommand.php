@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Command;
 
-use Longman\TelegramBot\Telegram;
+use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,14 +24,14 @@ class StartPullCommand extends Command
     public static $defaultName = 'start:pull';
 
     /**
-     * @var Telegram
+     * @var TelegramBotClientInterface
      */
     private $telegram;
 
     /**
      * @param Telegram $telegram
      */
-    public function __construct(Telegram $telegram)
+    public function __construct(TelegramBotClientInterface $telegram)
     {
         parent::__construct(null);
 
