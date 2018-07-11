@@ -6,9 +6,9 @@ namespace Sokil\TelegramBot\Service\TelegramBotClient;
 use Psr\Http\Message\RequestInterface;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiRequestException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiResponseException;
-use Sokil\TelegramBot\Service\TelegramBotClient\Response\Message;
-use Sokil\TelegramBot\Service\TelegramBotClient\Response\Update;
-use Sokil\TelegramBot\Service\TelegramBotClient\Response\WebHookInfo;
+use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Message;
+use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Update;
+use Sokil\TelegramBot\Service\TelegramBotClient\Struct\WebHookInfo;
 
 interface TelegramBotClientInterface
 {

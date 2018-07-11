@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "77596063531a699189cdb69f4fcf0f43",
+    "content-hash": "e03b4f78c2ed0b661207f63a90a3d007",
     "packages": [
         {
             "name": "evenement/evenement",
@@ -362,6 +362,50 @@
             "time": "2017-06-19T01:22:40+00:00"
         },
         {
+            "name": "myclabs/php-enum",
+            "version": "1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/php-enum.git",
+                "reference": "8c5649e4ed99acd53a40eada270154dcac089f7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/8c5649e4ed99acd53a40eada270154dcac089f7e",
+                "reference": "8c5649e4ed99acd53a40eada270154dcac089f7e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|^5.7|^6.0",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyCLabs\\Enum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP Enum contributors",
+                    "homepage": "https://github.com/myclabs/php-enum/graphs/contributors"
+                }
+            ],
+            "description": "PHP Enum implementation",
+            "homepage": "http://github.com/myclabs/php-enum",
+            "keywords": [
+                "enum"
+            ],
+            "time": "2018-05-09T08:09:15+00:00"
+        },
+        {
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -700,16 +744,16 @@
         },
         {
             "name": "react/event-loop",
-            "version": "v0.5.2",
+            "version": "v0.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/event-loop.git",
-                "reference": "e94985d93c689c554265b01014f8c3064921ca27"
+                "reference": "228178a947de1f7cd9296d691878569628288c6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/event-loop/zipball/e94985d93c689c554265b01014f8c3064921ca27",
-                "reference": "e94985d93c689c554265b01014f8c3064921ca27",
+                "url": "https://api.github.com/repos/reactphp/event-loop/zipball/228178a947de1f7cd9296d691878569628288c6f",
+                "reference": "228178a947de1f7cd9296d691878569628288c6f",
                 "shasum": ""
             },
             "require": {
@@ -737,7 +781,7 @@
                 "asynchronous",
                 "event-loop"
             ],
-            "time": "2018-04-24T11:23:06+00:00"
+            "time": "2018-07-09T13:51:04+00:00"
         },
         {
             "name": "react/http",
@@ -944,16 +988,16 @@
         },
         {
             "name": "react/socket",
-            "version": "v0.8.12",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/socket.git",
-                "reference": "7f7e6c56ccda7418a1a264892a625f38a5bdee0c"
+                "reference": "476e2644a634c6301b8111e6d22a61679e6e6bd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/socket/zipball/7f7e6c56ccda7418a1a264892a625f38a5bdee0c",
-                "reference": "7f7e6c56ccda7418a1a264892a625f38a5bdee0c",
+                "url": "https://api.github.com/repos/reactphp/socket/zipball/476e2644a634c6301b8111e6d22a61679e6e6bd0",
+                "reference": "476e2644a634c6301b8111e6d22a61679e6e6bd0",
                 "shasum": ""
             },
             "require": {
@@ -987,20 +1031,20 @@
                 "reactphp",
                 "stream"
             ],
-            "time": "2018-06-11T14:33:43+00:00"
+            "time": "2018-07-11T14:38:22+00:00"
         },
         {
             "name": "react/stream",
-            "version": "v0.7.7",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/stream.git",
-                "reference": "10100896018fd847a257cd81143b8e1b7be08e40"
+                "reference": "fdd0140f42805d65bf9687636503db0b326d2244"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/stream/zipball/10100896018fd847a257cd81143b8e1b7be08e40",
-                "reference": "10100896018fd847a257cd81143b8e1b7be08e40",
+                "url": "https://api.github.com/repos/reactphp/stream/zipball/fdd0140f42805d65bf9687636503db0b326d2244",
+                "reference": "fdd0140f42805d65bf9687636503db0b326d2244",
                 "shasum": ""
             },
             "require": {
@@ -1033,7 +1077,7 @@
                 "stream",
                 "writable"
             ],
-            "time": "2018-01-19T15:04:38+00:00"
+            "time": "2018-07-11T14:38:16+00:00"
         },
         {
             "name": "ringcentral/psr7",
@@ -1139,50 +1183,6 @@
             ],
             "description": "Command Bus Bundle",
             "time": "2017-05-17T09:05:58+00:00"
-        },
-        {
-            "name": "sokil/php-state",
-            "version": "0.5.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sokil/php-state.git",
-                "reference": "fb3a84b48d56962d768abaec5c9fd571fa7b5cd4"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sokil/php-state/zipball/fb3a84b48d56962d768abaec5c9fd571fa7b5cd4",
-                "reference": "fb3a84b48d56962d768abaec5c9fd571fa7b5cd4",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*",
-                "satooshi/php-coveralls": "0.7.*",
-                "symfony/yaml": "2.*"
-            },
-            "suggest": {
-                "symfony/yaml": "YAML parser from Symfony"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Sokil\\State\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Dmytro Sokil",
-                    "email": "dmytro.sokil@gmail.com"
-                }
-            ],
-            "description": "State machine",
-            "time": "2016-08-30T21:23:52+00:00"
         },
         {
             "name": "symfony/config",

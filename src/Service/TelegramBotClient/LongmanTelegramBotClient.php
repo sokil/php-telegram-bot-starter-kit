@@ -3,17 +3,20 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Service\TelegramBotClient;
 
-use Longman\TelegramBot\Request;
+use Psr\Http\Message\RequestInterface;
 use Longman\TelegramBot\Telegram;
+use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Entities\Update as LongmanTelegramBotUpdate;
 use Longman\TelegramBot\Exception\TelegramException as LongmanTelegramBotException;
-use Psr\Http\Message\RequestInterface;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiRequestException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiResponseException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramBotServerRequestException;
-use Sokil\TelegramBot\Service\TelegramBotClient\Response\Update;
-use Sokil\TelegramBot\Service\TelegramBotClient\Response\Message;
-use Sokil\TelegramBot\Service\TelegramBotClient\Response\WebHookInfo;
+use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Chat;
+use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Update;
+use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Message;
+use Sokil\TelegramBot\Service\TelegramBotClient\Struct\User;
+use Sokil\TelegramBot\Service\TelegramBotClient\Struct\WebHookInfo;
+use Sokil\TelegramBot\Service\TelegramBotClient\Type\ChatType;
 
 /**
  * Adapter to Longman's Telegram API client
@@ -127,8 +130,20 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
             throw new TelegramBotServerRequestException('Can not create Update object');
         }
 
+        /** @var \Longman\TelegramBot\Entities\Message $message */
+        $message = $update->getUpdateContent();
+
         return new Update(
-            new Message($update->getUpdateContent()->getText())
+            new Message(
+                new Chat(
+                    $message->getChat()->getId(),
+                    new ChatType($message->getChat()->getType())
+                ),
+                new User(
+                    $message->getFrom()->getId()
+                ),
+                $message->getText()
+            )
         );
     }
 

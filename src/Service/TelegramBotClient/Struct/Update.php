@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokil\TelegramBot\Service\TelegramBotClient\Response;
-
-use Sokil\TelegramBot\Service\TelegramBotClient\Response\Message;
+namespace Sokil\TelegramBot\Service\TelegramBotClient\Struct;
 
 /**
  * @see https://core.telegram.org/bots/webhooks#testing-your-bot-with-updates Examples
