@@ -18,11 +18,33 @@ class User
     private $id;
 
     /**
-     * @param int $id
+     * @var string
      */
-    public function __construct(int $id)
+    private $firstName;
+
+    /**
+     * @var string|null
+     */
+    private $lastName;
+
+    /**
+     * @var string|null
+     */
+    private $userName;
+
+    /**
+     * User constructor.
+     * @param int $id
+     * @param string $firstName
+     * @param null|string $lastName
+     * @param null|string $userName
+     */
+    public function __construct(int $id, string $firstName, ?string $lastName, ?string $userName)
     {
         $this->id = $id;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->userName = $userName;
     }
 
     /**
@@ -31,5 +53,29 @@ class User
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getUserName(): ?string
+    {
+        return $this->userName;
     }
 }

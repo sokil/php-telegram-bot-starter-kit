@@ -140,7 +140,10 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
                     new ChatType($message->getChat()->getType())
                 ),
                 new User(
-                    $message->getFrom()->getId()
+                    $message->getFrom()->getId(),
+                    $message->getFrom()->getFirstName(),
+                    $message->getFrom()->getLastName(),
+                    $message->getFrom()->getUsername()
                 ),
                 $message->getText()
             )

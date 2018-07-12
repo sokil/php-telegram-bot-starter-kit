@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface: '@Sokil\TelegramBot\Service\TelegramBotClient\LongmanTelegramBotClient'
+
+  Longman\TelegramBot\Telegram:
+    class: Longman\TelegramBot\Telegram
+    arguments:
+      - '%env(TELEGRAM_BOT_TOKEN)%'
+      - '%env(TELEGRAM_BOT_USERNAME)%'
+

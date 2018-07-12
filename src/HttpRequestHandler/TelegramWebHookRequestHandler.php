@@ -56,6 +56,7 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
         try {
             // build update from request
             $update = $this->telegramBotClient->buildWebHookUpdateFromRequest($request);
+
             $userId = $update->getMessage()->getFrom()->getId();
             $messageText = $update->getMessage()->getText();
 
@@ -68,7 +69,9 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
             }
 
             // route request to related command handler
-            $conversation->apply($messageText);
+            if ($conversation !== null) {
+                $conversation->apply($update);
+            }
 
             // if conversation finished remove it from collection
             if ($conversation->isFinished()) {

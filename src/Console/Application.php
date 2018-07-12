@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Console;
 
-use Sokil\CommandBusBundle\CommandBusBundle;
-use Sokil\CommandBusBundle\DependencyInjection\RegisterCommandHandlerCompilerPass;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Console\Application as ConsoleApplication;
@@ -85,8 +83,6 @@ class Application
                 PassConfig::TYPE_BEFORE_REMOVING,
                 0
             );
-
-            $containerBuilder->addCompilerPass(new RegisterCommandHandlerCompilerPass());
 
             // allow autoconfiguration
             $containerBuilder

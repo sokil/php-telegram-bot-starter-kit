@@ -9,12 +9,37 @@ namespace Sokil\TelegramBot\ConversationManager;
 class ConversationDispatcher
 {
     /**
+     * Map  class name of conversation to initial message pattern
+     *
+     * @var array
+     */
+    private $conversationToMessageMap;
+
+    /**
+     * @param string[] $mapConversationClassToInitialMessagePattern
+     */
+    public function __construct(array $mapConversationClassToInitialMessagePattern)
+    {
+        $this->conversationToMessageMap = $mapConversationClassToInitialMessagePattern;
+    }
+
+    /**
      * @param string $message
      *
-     * @return AbstractConversation
+     * @return ConversationInterface|null
      */
-    public function dispatch(string $message): AbstractConversation
+    public function dispatch(string $message): ?ConversationInterface
     {
+        $conversation = null;
 
+        foreach ($this->conversationToMessageMap as $conversationClassName => $conversationInitialMessagePattern) {
+            if ($conversationInitialMessagePattern === $message) {
+                $conversation = new $conversationClassName();
+            } else if (preg_match($conversationInitialMessagePattern, $message)) {
+                $conversation = new $conversationClassName();
+            }
+        }
+
+        return $conversation;
     }
 }

@@ -7,14 +7,11 @@ services:
   Sokil\TelegramBot\Service\:
     resource: '../../Service'
 
+  Sokil\TelegramBot\ConversationManager\ConversationDispatcher:
+    arguments:
+      -
+        Sokil\TelegramBot\Conversation\WhoAmIConversation: "/whoami"
+
   Sokil\TelegramBot\Conversation\:
     resource: '../../Conversation'
-
-  Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface: '@Sokil\TelegramBot\Service\TelegramBotClient\LongmanTelegramBotClient'
-
-  Longman\TelegramBot\Telegram:
-    class: Longman\TelegramBot\Telegram
-    arguments:
-      - '%env(TELEGRAM_BOT_TOKEN)%'
-      - '%env(TELEGRAM_BOT_USERNAME)%'
 
