@@ -18,24 +18,29 @@ class ConversationDispatcher
     /**
      * @param string[] $mapConversationClassToInitialMessagePattern
      */
-    public function __construct(array $mapConversationClassToInitialMessagePattern)
+    public function __construct(
+        array $mapConversationClassToInitialMessagePattern
+    )
     {
         $this->conversationToMessageMap = $mapConversationClassToInitialMessagePattern;
     }
 
     /**
-     * @param string $message
+     * @param string $initialConversationMessage
      *
-     * @return ConversationInterface|null
+     * @return AbstractConversation|null
      */
-    public function dispatch(string $message): ?ConversationInterface
+    public function dispatchConversation(string $initialConversationMessage): ?AbstractConversation
     {
         $conversation = null;
 
+        // build new conversation relatively to initial message
         foreach ($this->conversationToMessageMap as $conversationClassName => $conversationInitialMessagePattern) {
-            if ($conversationInitialMessagePattern === $message) {
+            if ($conversationInitialMessagePattern === $initialConversationMessage) {
+                // direct match
                 $conversation = new $conversationClassName();
-            } else if (preg_match($conversationInitialMessagePattern, $message)) {
+            } else if (preg_match($conversationInitialMessagePattern, $initialConversationMessage)) {
+                // regex pattern match
                 $conversation = new $conversationClassName();
             }
         }

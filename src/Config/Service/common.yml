@@ -4,14 +4,14 @@ services:
     autoconfigure: true
     public: false
 
+  config_file_locator:
+    class: Symfony\Component\Config\FileLocator
+    arguments:
+      - ['%kernel.config_dir%']
+
+  Symfony\Component\EventDispatcher\EventDispatcherInterface:
+    class: Symfony\Component\EventDispatcher\EventDispatcher
+
   Sokil\TelegramBot\Service\:
     resource: '../../Service'
-
-  Sokil\TelegramBot\ConversationManager\ConversationDispatcher:
-    arguments:
-      -
-        Sokil\TelegramBot\Conversation\WhoAmIConversation: "/whoami"
-
-  Sokil\TelegramBot\Conversation\:
-    resource: '../../Conversation'
 

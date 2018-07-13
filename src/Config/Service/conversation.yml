@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Sokil\TelegramBot\Conversation\:
+    resource: '../../Conversation/'
+
+  Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher:
+    arguments:
+      -
+        Sokil\TelegramBot\Conversation\WhoAmIConversation: "/whoami"
+        Sokil\TelegramBot\Conversation\HelpConversation: "/help"

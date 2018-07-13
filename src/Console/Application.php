@@ -3,17 +3,19 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Console;
 
+use Sokil\TelegramBot\DependencyInjection\CompilerPass\WorkflowBuildCompilerPass;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader as DependencyInjectionYamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\DependencyInjection\AddConsoleCommandPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\Workflow\Definition;
 
 class Application
 {
@@ -84,13 +86,15 @@ class Application
                 0
             );
 
+            $containerBuilder->addCompilerPass(new WorkflowBuildCompilerPass());
+
             // allow autoconfiguration
             $containerBuilder
                 ->registerForAutoconfiguration(Command::class)
                 ->addTag('console.command');
 
             // load services from config
-            $serviceConfigLoader = new YamlFileLoader(
+            $serviceConfigLoader = new DependencyInjectionYamlFileLoader(
                 $containerBuilder,
                 new FileLocator($this->projectDir . '/src/Config/Service')
             );

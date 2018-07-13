@@ -65,7 +65,7 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
 
             // no conversation found, try to init new conversation if detected initial message
             if ($conversation === null) {
-                $conversation = $this->conversationDispatcher->dispatch($messageText);
+                $conversation = $this->conversationDispatcher->dispatchConversation($messageText);
             }
 
             // route request to related command handler

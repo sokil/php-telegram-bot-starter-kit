@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace Sokikl\TelegramBot\Conversation;
 
-use Sokil\TelegramBot\ConversationManager\ConversationInterface;
+use Sokil\TelegramBot\ConversationManager\AbstractConversation;
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Update;
 
-class WhoAmIConversation implements ConversationInterface
+class WhoAmIConversation extends AbstractConversation
 {
     /**
      * @var int

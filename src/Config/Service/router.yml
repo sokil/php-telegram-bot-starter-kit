@@ -9,15 +9,10 @@ services:
     autoconfigure: true
     public: false
 
-  router.config_file_locator:
-    class: Symfony\Component\Config\FileLocator
-    arguments:
-      - ['%kernel.config_dir%']
-
   router.config_file_loader:
     class: Symfony\Component\Routing\Loader\YamlFileLoader
     arguments:
-      - '@router.config_file_locator'
+      - '@config_file_locator'
 
   router.request_context:
     class: Symfony\Component\Routing\RequestContext
