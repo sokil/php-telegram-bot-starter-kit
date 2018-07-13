@@ -4,15 +4,15 @@ services:
     autoconfigure: true
     public: false
 
-  Symfony\Component\Workflow\Registry:
+  workflow.registry:
     class: Symfony\Component\Workflow\Registry
 
   workflow.abstract:
-    class: "Symfony\Component\Workflow\Workflow"
+    class: Symfony\Component\Workflow\Workflow
     abstract: "true"
     public: "true"
 
   state_machine.abstract:
-    class: "Symfony\Component\Workflow\StateMachine"
+    class: Symfony\Component\Workflow\StateMachine
     abstract: "true"
     public: "true"
