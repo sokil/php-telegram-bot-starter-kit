@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokil\TelegramBot\ConversationManager;
+namespace Sokil\TelegramBot\Service\ConversationManager;
 
 /**
  * Collection of all active conversations of bot with connected users

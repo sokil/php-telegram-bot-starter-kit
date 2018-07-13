@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokil\TelegramBot\ConversationManager;
+namespace Sokil\TelegramBot\Service\ConversationManager;
 
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Update;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
