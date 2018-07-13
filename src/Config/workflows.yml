@@ -1,12 +1,12 @@
 workflows:
-  conversation.help:
+  conversation_help:
     type: 'state_machine'
     marking_store:
       type: single_state'
       arguments:
         - 'state'
     supports:
-      - \Sokikl\TelegramBot\Conversation\HelpConversation
+      - \Sokil\TelegramBot\Conversation\HelpConversation
     initial_place: menu_not_shown
     places:
       - menu_not_shown

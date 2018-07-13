@@ -99,9 +99,12 @@ class Application
                 new FileLocator($this->projectDir . '/src/Config/Service')
             );
 
-            $serviceConfigLoader->load('common.yml');
-            $serviceConfigLoader->load('router.yml');
             $serviceConfigLoader->load('commands.yml');
+            $serviceConfigLoader->load('common.yml');
+            $serviceConfigLoader->load('conversation.yml');
+            $serviceConfigLoader->load('router.yml');
+            $serviceConfigLoader->load('telegramApi.yml');
+            $serviceConfigLoader->load('workflow.yml');
 
             $containerBuilder->compile();
 

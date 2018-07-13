@@ -26,7 +26,7 @@ class WorkflowBuildCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // read yaml config
-        $yamlConfigPath = $container->getParameterBag()->get('kernel.config_dir') . '/workflows.yaml';
+        $yamlConfigPath = $container->getParameterBag()->get('kernel.config_dir') . '/workflows.yml';
         $yamlParser = new YamlParser();
         $config = $yamlParser->parseFile(
             $yamlConfigPath,
