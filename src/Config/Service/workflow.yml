@@ -11,8 +11,26 @@ services:
     class: Symfony\Component\Workflow\Workflow
     abstract: "true"
     public: "true"
+    arguments:
+      - # workflow definition
+      - null # marking store
+      - event_dispatcher
+      - # name
 
   state_machine.abstract:
     class: Symfony\Component\Workflow\StateMachine
     abstract: "true"
     public: "true"
+    arguments:
+      - # workflow definition
+      - null # marking store
+      - event_dispatcher
+      - # name
+
+  workflow.marking_store.multiple_state:
+    class: Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore
+    abstract: true
+
+  workflow.marking_store.single_state:
+    class: Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore
+    abstract: true

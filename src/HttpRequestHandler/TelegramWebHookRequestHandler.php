@@ -7,9 +7,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use React\Http\Response;
-use Sokil\TelegramBot\ConversationManager\ConversationDispatcher;
+use Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
-use Sokil\TelegramBot\ConversationManager\ConversationCollection;
+use Sokil\TelegramBot\Service\ConversationManager\ConversationCollection;
 
 class TelegramWebHookRequestHandler implements RequestHandlerInterface
 {

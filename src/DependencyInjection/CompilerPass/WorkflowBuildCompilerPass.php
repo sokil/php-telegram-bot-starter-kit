@@ -37,104 +37,114 @@ class WorkflowBuildCompilerPass implements CompilerPassInterface
 
         // register workflows
         foreach ($config['workflows'] as $name => $workflow) {
-            $type = $workflow['type'];
+            $type = $workflow['type']; // may be 'workflow' or 'state_machine'
 
-            // build metadata store
-            $metadataStoreDefinition = new DependencyInjectionDefinition(
-                InMemoryMetadataStore::class,
-                [[], [], null]
-            );
-
-            // configure metadata store with metadata
-            if ($workflow['metadata']) {
-                $metadataStoreDefinition->replaceArgument(0, $workflow['metadata']);
-            }
+            // id of workflow service
+            $workflowId = sprintf('%s.%s', $type, $name);
 
             // configure metadata store with places
-            $placesMetadata = array();
-            foreach ($workflow['places'] as $place) {
-                if ($place['metadata']) {
+            $placesMetadata = [];
+            foreach ($workflow['places'] as &$place) {
+                // normalize place
+                if (is_string($place)) {
+                    $place = ['name' => $place, 'metadata' => []];
+                }
+
+                if (isset($place['metadata'])) {
                     $placesMetadata[$place['name']] = $place['metadata'];
                 }
             }
-            if ($placesMetadata) {
-                $metadataStoreDefinition->replaceArgument(1, $placesMetadata);
-            }
 
-            // configure metadata store with transitions
+            // transitions
             $transitions = [];
             $transitionsMetadataDefinition = new DependencyInjectionDefinition(\SplObjectStorage::class);
-            foreach ($workflow['transitions'] as $transition) {
-                if ('workflow' === $type) {
-                    $transitionDefinition = new DependencyInjectionDefinition(
-                        Transition::class,
-                        [
-                            $transition['name'],
-                            $transition['from'],
-                            $transition['to']
-                        ]
-                    );
+            foreach ($workflow['transitions'] as $transitionName => $transition) {
+                // normalise transition
+                $transition['name'] = $transitionName;
+                $transition['from'] = (array)$transition['from'];
+                $transition['to'] = (array)$transition['to'];
+                if (!isset($transition['metadata'])) {
+                    $transition['metadata'] = [];
+                }
 
-                    $transitions[] = $transitionDefinition;
+                // build service definitions
+                switch ($type) {
+                    case 'workflow':
+                        $transitionDefinition = new DependencyInjectionDefinition(
+                            Transition::class,
+                            [
+                                $transition['name'],
+                                $transition['from'],
+                                $transition['to']
+                            ]
+                        );
 
-                    if ($transition['metadata']) {
+                        $transitions[] = $transitionDefinition;
+
                         $transitionsMetadataDefinition->addMethodCall('attach', array(
                             $transitionDefinition,
                             $transition['metadata'],
                         ));
-                    }
-                } elseif ('state_machine' === $type) {
-                    foreach ($transition['from'] as $from) {
-                        foreach ($transition['to'] as $to) {
-                            $transitionDefinition = new DependencyInjectionDefinition(
-                                Transition::class,
-                                [
-                                    $transition['name'],
-                                    $from,
-                                    $to
-                                ]
-                            );
 
-                            $transitions[] = $transitionDefinition;
+                        break;
 
-                            if ($transition['metadata']) {
+                    case 'state_machine':
+                        foreach ($transition['from'] as $from) {
+                            foreach ($transition['to'] as $to) {
+                                $transitionDefinition = new DependencyInjectionDefinition(
+                                    Transition::class,
+                                    [
+                                        $transition['name'],
+                                        $from,
+                                        $to
+                                    ]
+                                );
+
+                                $transitions[] = $transitionDefinition;
+
                                 $transitionsMetadataDefinition->addMethodCall('attach', array(
                                     $transitionDefinition,
                                     $transition['metadata'],
                                 ));
                             }
                         }
-                    }
+
+                        break;
                 }
             }
 
-            $metadataStoreDefinition->replaceArgument(2, $transitionsMetadataDefinition);
-
-            // create places
-            $places = array_map(
-                function (array $place) {
-                    return $place['name'];
-                },
-                $workflow['places']
+            // build metadata store
+            $metadataStoreDefinition = new DependencyInjectionDefinition(
+                InMemoryMetadataStore::class,
+                [
+                    $workflow['metadata'] ?? [],
+                    $placesMetadata,
+                    $transitionsMetadataDefinition
+                ]
             );
 
-            // Create a Definition
-            $definitionDefinition = new DependencyInjectionDefinition(WorkflowDefinition::class);
-
-            $definitionDefinition->setPublic(false);
-            $definitionDefinition->addArgument($places);
-            $definitionDefinition->addArgument($transitions);
-            $definitionDefinition->addArgument($workflow['initial_place'] ?? null);
-            $definitionDefinition->addArgument($metadataStoreDefinition);
-            $definitionDefinition->addTag('workflow.definition', array(
-                'name' => $name,
-                'type' => $type,
-                'marking_store' => isset($workflow['marking_store']['type']) ? $workflow['marking_store']['type'] : null,
+            // Create a Workflow Definition
+            $workflowDefinitionDefinition = new DependencyInjectionDefinition(WorkflowDefinition::class);
+            $workflowDefinitionDefinition->setPublic(false);
+            $workflowDefinitionDefinition->addArgument($transitions);
+            $workflowDefinitionDefinition->addArgument($workflow['initial_place'] ?? null);
+            $workflowDefinitionDefinition->addArgument($metadataStoreDefinition);
+            $workflowDefinitionDefinition->addArgument(array_map(
+                function (array $place) { return $place['name']; },
+                $workflow['places']
             ));
+
+            $container->setDefinition(
+                sprintf('%s.definition', $workflowId),
+                $workflowDefinitionDefinition
+            );
 
             // create MarkingStore
             if (isset($workflow['marking_store']['type'])) {
-                $markingStoreDefinition = new ChildDefinition('workflow.marking_store.'.$workflow['marking_store']['type']);
+                $markingStoreDefinition = new ChildDefinition(
+                    'workflow.marking_store.' . $workflow['marking_store']['type']
+                );
+
                 foreach ($workflow['marking_store']['arguments'] as $argument) {
                     $markingStoreDefinition->addArgument($argument);
                 }
@@ -143,32 +153,27 @@ class WorkflowBuildCompilerPass implements CompilerPassInterface
             }
 
             // create Workflow
-            $workflowId = sprintf('%s.%s', $type, $name);
             $workflowDefinition = new ChildDefinition(sprintf('%s.abstract', $type));
-            $workflowDefinition->replaceArgument(0, new Reference(sprintf('%s.definition', $workflowId)));
-            if (isset($markingStoreDefinition)) {
-                $workflowDefinition->replaceArgument(1, $markingStoreDefinition);
-            }
-            $workflowDefinition->replaceArgument(3, $name);
-
-            // store to container
             $container->setDefinition($workflowId, $workflowDefinition);
-            $container->setDefinition(sprintf('%s.definition', $workflowId), $definitionDefinition);
+
+            $workflowDefinition->replaceArgument(0, new Reference(sprintf('%s.definition', $workflowId)));
+            $workflowDefinition->replaceArgument(1, $markingStoreDefinition ?? null);
+            $workflowDefinition->replaceArgument(3, $name);
 
             // add workflow to Registry
             if ($workflow['supports']) {
                 foreach ($workflow['supports'] as $supportedClassName) {
                     $strategyDefinition = new DependencyInjectionDefinition(
                         InstanceOfSupportStrategy::class,
-                        array($supportedClassName)
+                        [$supportedClassName]
                     );
                     $strategyDefinition->setPublic(false);
                     $registryDefinition->addMethodCall(
                         'addWorkflow',
-                        array(
+                        [
                             new Reference($workflowId),
                             $strategyDefinition
-                        )
+                        ]
                     );
                 }
             } elseif (isset($workflow['support_strategy'])) {

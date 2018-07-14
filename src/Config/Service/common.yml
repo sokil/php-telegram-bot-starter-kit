@@ -9,8 +9,10 @@ services:
     arguments:
       - ['%kernel.config_dir%']
 
-  Symfony\Component\EventDispatcher\EventDispatcherInterface:
+  event_dispatcher:
     class: Symfony\Component\EventDispatcher\EventDispatcher
+
+  Symfony\Component\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
 
   Sokil\TelegramBot\Service\:
     resource: '../../Service'

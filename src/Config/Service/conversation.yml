@@ -8,6 +8,7 @@ services:
     resource: '../../Conversation/'
 
   Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher:
+    class: Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher
     arguments:
       -
         Sokil\TelegramBot\Conversation\WhoAmIConversation: "/whoami"

@@ -20,8 +20,7 @@ class ConversationDispatcher
      */
     public function __construct(
         array $mapConversationClassToInitialMessagePattern
-    )
-    {
+    ) {
         $this->conversationToMessageMap = $mapConversationClassToInitialMessagePattern;
     }
 

@@ -2,7 +2,7 @@ workflows:
   conversation_help:
     type: 'state_machine'
     marking_store:
-      type: single_state'
+      type: 'single_state'
       arguments:
         - 'state'
     supports:
