@@ -7,6 +7,8 @@ services:
   workflow.registry:
     class: Symfony\Component\Workflow\Registry
 
+  Symfony\Component\Workflow\Registry: '@workflow.registry'
+
   workflow.abstract:
     class: Symfony\Component\Workflow\Workflow
     abstract: "true"

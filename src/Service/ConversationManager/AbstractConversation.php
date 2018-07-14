@@ -18,9 +18,9 @@ abstract class AbstractConversation
     protected $telegramBotClient;
 
     /**
-     * @var Workflow
+     * @var string
      */
-    protected $workflow;
+    protected $state;
 
     /**
      * @param TelegramBotClientInterface $telegramBotClient
@@ -31,7 +31,17 @@ abstract class AbstractConversation
     }
 
     /**
-     * @param Update $update
+     * @return string
      */
-    abstract public function apply(Update $update): void;
+    public function getState(): string
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param Update $update
+     *
+     * @return string Next state
+     */
+    abstract public function apply(Update $update): string;
 }
