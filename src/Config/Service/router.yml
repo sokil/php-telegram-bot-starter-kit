@@ -42,6 +42,7 @@ services:
   Sokil\TelegramBot\Service\HttpServer\HttpServer:
     class: Sokil\TelegramBot\Service\HttpServer\HttpServer
     arguments:
+      - '@event_loop'
       - '@router'
       - '@request_handler.locator'
       - '%env(HTTP_SERVER_PORT)%'

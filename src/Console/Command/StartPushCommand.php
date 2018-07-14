@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Console\Command;
 
+use React\EventLoop\LoopInterface;
 use Sokil\TelegramBot\Service\HttpServer\HttpServer;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
 use Symfony\Component\Console\Command\Command;
@@ -22,6 +23,11 @@ class StartPushCommand extends Command
     public static $defaultName = 'start:push';
 
     /**
+     * @var LoopInterface
+     */
+    private $eventLoop;
+
+    /**
      * @var TelegramBotClientInterface
      */
     private $telegram;
@@ -37,17 +43,20 @@ class StartPushCommand extends Command
     private $httpServer;
 
     /**
+     * @param LoopInterface $eventLoop
      * @param TelegramBotClientInterface $telegram
      * @param RouterInterface $router
      * @param HttpServer $httpServer
      */
     public function __construct(
+        LoopInterface $eventLoop,
         TelegramBotClientInterface $telegram,
         RouterInterface $router,
         HttpServer $httpServer
     ) {
         parent::__construct(null);
 
+        $this->eventLoop = $eventLoop;
         $this->telegram = $telegram;
         $this->router = $router;
         $this->httpServer = $httpServer;
@@ -85,7 +94,9 @@ class StartPushCommand extends Command
             return 1;
         }
 
-        $this->httpServer->run();
+        $this->httpServer->create();
+
+        $this->eventLoop->run();
 
         return 0;
     }

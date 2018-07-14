@@ -6,7 +6,7 @@ namespace Sokil\TelegramBot\Service\HttpServer;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\RouterInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use React\EventLoop\Factory as ReactEventLoopFactory;
+use React\EventLoop\LoopInterface;
 use React\Socket\Server as ReactSocketServer;
 use React\Http\Server as ReactHttpServer;
 use React\Http\Response as ReactHttpResponse;
@@ -16,6 +16,11 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class HttpServer
 {
+    /**
+     * @var LoopInterface
+     */
+    private $eventLoop;
+
     /**
      * @var RouterInterface
      */
@@ -32,24 +37,27 @@ class HttpServer
     private $httpServerPort;
 
     /**
+     * @param LoopInterface $eventLoop
      * @param RouterInterface $router
      * @param ServiceLocator $requestHandlerLocator
      * @param int $httpServerPort
      */
     public function __construct(
+        LoopInterface $eventLoop,
         RouterInterface $router,
         ServiceLocator $requestHandlerLocator,
         int $httpServerPort
     ) {
+        $this->eventLoop = $eventLoop;
         $this->router = $router;
         $this->requestHandlerLocator = $requestHandlerLocator;
         $this->httpServerPort = $httpServerPort;
     }
 
     /**
-     * Run server
+     * Create HTTP server
      */
-    public function run(): void
+    public function create(): void
     {
         // create HTTP server
         $server = new ReactHttpServer(function (ServerRequestInterface $request) {
@@ -97,14 +105,8 @@ class HttpServer
             return $response;
         });
 
-        // build event loop
-        $loop = ReactEventLoopFactory::create();
-
         // create TCP server
-        $socket = new ReactSocketServer($this->httpServerPort, $loop);
+        $socket = new ReactSocketServer($this->httpServerPort, $this->eventLoop);
         $server->listen($socket);
-
-        // run bot
-        $loop->run();
     }
 }

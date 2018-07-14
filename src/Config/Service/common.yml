@@ -14,6 +14,12 @@ services:
 
   Symfony\Component\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
 
+  event_loop:
+    class: React\EventLoop\LoopInterface
+    factory: [React\EventLoop\Factory, create]
+
+  React\EventLoop\LoopInterface: '@event_loop'
+
   Sokil\TelegramBot\Service\:
     resource: '../../Service'
 
