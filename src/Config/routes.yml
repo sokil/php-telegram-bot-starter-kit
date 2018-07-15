@@ -1,5 +1,5 @@
 telegramWebHook:
     path: telegramWebHook
-    controller: Sokil\TelegramBot\RequestHandler\TelegramWebHookRequestHandler
+    controller: Sokil\TelegramBot\HttpRequestHandler\TelegramWebHookRequestHandler
     methods:
       - POST

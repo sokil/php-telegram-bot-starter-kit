@@ -104,6 +104,11 @@ class StartPushCommand extends Command
             $webHookInfo = $this->telegram->getWebHookInfo();
             if ($webHookInfo->getUrl() === null) {
                 // set web hook
+                $output->writeln(
+                    sprintf('<info>Setting web hook to %s</info>', $webHookInfo->getUrl()),
+                    OutputInterface::VERBOSITY_VERBOSE
+                );
+
                 $this->telegram->setWebhook($telegramWebHookUrl);
             }
 

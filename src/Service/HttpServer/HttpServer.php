@@ -86,13 +86,13 @@ class HttpServer
                 $response = new ReactHttpResponse(
                     404,
                     array('Content-Type' => 'text/plain'),
-                    'Not found'
+                    'Resource not found'
                 );
             } catch (\Throwable $e) {
                 $response = new ReactHttpResponse(
                     500,
                     array('Content-Type' => 'text/plain'),
-                    'Route not found'
+                    'Internal server error'
                 );
             }
 
