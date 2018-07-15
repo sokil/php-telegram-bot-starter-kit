@@ -1,0 +1,6 @@
+conversations:
+  Sokil\TelegramBot\Conversation\WhoAmIConversation:
+    pattern: "/whoami"
+
+  Sokil\TelegramBot\Conversation\HelpConversation:
+    pattern: "/help"

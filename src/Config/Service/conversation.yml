@@ -10,6 +10,4 @@ services:
   Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher:
     class: Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher
     arguments:
-      -
-        Sokil\TelegramBot\Conversation\WhoAmIConversation: "/whoami"
-        Sokil\TelegramBot\Conversation\HelpConversation: "/help"
+      - [] # conversations collection

@@ -32,32 +32,26 @@ class HttpServer
     private $requestHandlerLocator;
 
     /**
-     * @var int
-     */
-    private $httpServerPort;
-
-    /**
      * @param LoopInterface $eventLoop
      * @param RouterInterface $router
      * @param ServiceLocator $requestHandlerLocator
-     * @param int $httpServerPort
      */
     public function __construct(
         LoopInterface $eventLoop,
         RouterInterface $router,
-        ServiceLocator $requestHandlerLocator,
-        int $httpServerPort
+        ServiceLocator $requestHandlerLocator
     ) {
         $this->eventLoop = $eventLoop;
         $this->router = $router;
         $this->requestHandlerLocator = $requestHandlerLocator;
-        $this->httpServerPort = $httpServerPort;
     }
 
     /**
      * Create HTTP server
+     *
+     * @param int $httpServerPort
      */
-    public function create(): void
+    public function create(int $httpServerPort): void
     {
         // create HTTP server
         $server = new ReactHttpServer(function (ServerRequestInterface $request) {
@@ -106,7 +100,7 @@ class HttpServer
         });
 
         // create TCP server
-        $socket = new ReactSocketServer($this->httpServerPort, $this->eventLoop);
+        $socket = new ReactSocketServer($httpServerPort, $this->eventLoop);
         $server->listen($socket);
     }
 }

@@ -13,15 +13,15 @@ class ConversationDispatcher
      *
      * @var array
      */
-    private $conversationToMessageMap;
+    private $conversationClassNames;
 
     /**
-     * @param string[] $mapConversationClassToInitialMessagePattern
+     * @param string[] $conversationClassNames
      */
     public function __construct(
-        array $mapConversationClassToInitialMessagePattern
+        array $conversationClassNames
     ) {
-        $this->conversationToMessageMap = $mapConversationClassToInitialMessagePattern;
+        $this->conversationClassNames = $conversationClassNames;
     }
 
     /**
@@ -34,7 +34,8 @@ class ConversationDispatcher
         $conversation = null;
 
         // build new conversation relatively to initial message
-        foreach ($this->conversationToMessageMap as $conversationClassName => $conversationInitialMessagePattern) {
+        foreach ($this->conversationClassNames as $conversationClassName => $conversationMetadata) {
+            $conversationInitialMessagePattern = $conversationMetadata['pattern'];
             if ($conversationInitialMessagePattern === $initialConversationMessage) {
                 // direct match
                 $conversation = new $conversationClassName();

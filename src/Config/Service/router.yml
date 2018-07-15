@@ -45,7 +45,6 @@ services:
       - '@event_loop'
       - '@router'
       - '@request_handler.locator'
-      - '%env(HTTP_SERVER_PORT)%'
 
   Sokil\TelegramBot\HttpRequestHandler\:
     resource: '../../HttpRequestHandler'

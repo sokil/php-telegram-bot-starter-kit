@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokil\TelegramBot\DependencyInjection\CompilerPass;
+namespace Sokil\TelegramBot\Service\Workflow\DependencyInjection\CompilerPass;
 
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;

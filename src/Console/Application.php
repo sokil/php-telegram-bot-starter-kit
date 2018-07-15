@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Console;
 
-use Sokil\TelegramBot\DependencyInjection\CompilerPass\WorkflowBuildCompilerPass;
+use Sokil\TelegramBot\Service\Workflow\DependencyInjection\CompilerPass\WorkflowBuildCompilerPass;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Console\Application as ConsoleApplication;
