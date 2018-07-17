@@ -110,6 +110,11 @@ class StartPushCommand extends Command
                 );
 
                 $this->telegram->setWebhook($telegramWebHookUrl);
+            } else {
+                $output->writeln(
+                    sprintf('<info>Web hook already set to %s</info>', $webHookInfo->getUrl()),
+                    OutputInterface::VERBOSITY_VERBOSE
+                );
             }
 
         } catch (\Throwable $e) {
