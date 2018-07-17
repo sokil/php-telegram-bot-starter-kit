@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Console;
 
+use Sokil\TelegramBot\Service\Logger\ConsoleLogger;
 use Sokil\TelegramBot\Service\Workflow\DependencyInjection\CompilerPass\WorkflowBuildCompilerPass;
+use Symfony\Component\Console\ConsoleEvents;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Console\Application as ConsoleApplication;
@@ -15,6 +18,7 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\Config\ConfigCache;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\Definition;
 
 class Application
@@ -126,11 +130,24 @@ class Application
         require_once $containerConfigCache->getPath();
         $container = new \ProjectServiceContainer();
 
+        // configure events
+        /** @var EventDispatcherInterface $eventDispatcher */
+        $eventDispatcher = $container->get('event_dispatcher');
+
         // init application
         $application = new ConsoleApplication();
-
-        // allow lazy load of commands
+        $application->setDispatcher($eventDispatcher);
         $application->setCommandLoader($container->get('console.command_loader'));
+
+        // configure console logger with output
+        $eventDispatcher->addListener(
+            ConsoleEvents::COMMAND,
+            function(ConsoleCommandEvent $event) use ($container) {
+                /** @var ConsoleLogger $logger */
+                $logger = $container->get('logger');
+                $logger->setOutput($event->getOutput());
+            }
+        );
 
         // run application
         $application->run();

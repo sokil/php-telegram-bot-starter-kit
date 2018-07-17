@@ -10,6 +10,7 @@ services:
       - ['%kernel.config_dir%']
 
   event_dispatcher:
+    public: true
     class: Symfony\Component\EventDispatcher\EventDispatcher
 
   Symfony\Component\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
@@ -25,6 +26,6 @@ services:
 
   logger:
     class: Sokil\TelegramBot\Service\Logger\ConsoleLogger
+    public: true
 
   Psr\Log\LoggerInterface: '@logger'
-

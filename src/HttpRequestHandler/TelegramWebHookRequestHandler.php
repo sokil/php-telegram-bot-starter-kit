@@ -6,6 +6,7 @@ namespace Sokil\TelegramBot\HttpRequestHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use React\Http\Response;
 use Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
@@ -38,6 +39,11 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
     private $workflowRegistry;
 
     /**
+     * @var LoggerInterfaces
+     */
+    private $logger;
+
+    /**
      * @param TelegramBotClientInterface $telegramBotClient
      * @param ConversationDispatcher $conversationDispatcher
      * @param ConversationCollection $conversationCollection
@@ -47,12 +53,14 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
         TelegramBotClientInterface $telegramBotClient,
         ConversationDispatcher $conversationDispatcher,
         ConversationCollection $conversationCollection,
-        WorkflowRegistry $workflowRegistry
+        WorkflowRegistry $workflowRegistry,
+        LoggerInterface $logger
     ) {
         $this->telegramBotClient = $telegramBotClient;
         $this->conversationDispatcher = $conversationDispatcher;
         $this->conversationCollection = $conversationCollection;
         $this->workflowRegistry = $workflowRegistry;
+        $this->logger = $logger;
     }
 
     /**
@@ -63,8 +71,14 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         // debug
-        echo $request->getBody()->getContents();
+        $this->logger->debug(
+            '[TelegramWebHookRequestHandler] Request handled',
+            [
+                'request' => $request->getBody()->getContents(),
+            ]
+        );
 
+        // handle request
         try {
             // build update from request
             $update = $this->telegramBotClient->buildWebHookUpdateFromRequest($request);
@@ -103,6 +117,8 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
             // build response
             return new Response(200);
         } catch (\Throwable $e) {
+            $this->logger->critical('[TelegramWebHookRequestHandler] ' . $e->getMessage());
+
             return new Response(500);
         }
     }
