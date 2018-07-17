@@ -126,13 +126,13 @@ class WorkflowBuildCompilerPass implements CompilerPassInterface
             // Create a Workflow Definition
             $workflowDefinitionDefinition = new DependencyInjectionDefinition(WorkflowDefinition::class);
             $workflowDefinitionDefinition->setPublic(false);
-            $workflowDefinitionDefinition->addArgument($transitions);
-            $workflowDefinitionDefinition->addArgument($workflow['initial_place'] ?? null);
-            $workflowDefinitionDefinition->addArgument($metadataStoreDefinition);
             $workflowDefinitionDefinition->addArgument(array_map(
                 function (array $place) { return $place['name']; },
                 $workflow['places']
             ));
+            $workflowDefinitionDefinition->addArgument($transitions);
+            $workflowDefinitionDefinition->addArgument($workflow['initial_place'] ?? null);
+            $workflowDefinitionDefinition->addArgument($metadataStoreDefinition);
 
             $container->setDefinition(
                 sprintf('%s.definition', $workflowId),

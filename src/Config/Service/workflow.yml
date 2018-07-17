@@ -16,7 +16,7 @@ services:
     arguments:
       - # workflow definition
       - null # marking store
-      - event_dispatcher
+      - '@event_dispatcher'
       - # name
 
   state_machine.abstract:
@@ -26,7 +26,7 @@ services:
     arguments:
       - # workflow definition
       - null # marking store
-      - event_dispatcher
+      - '@event_dispatcher'
       - # name
 
   workflow.marking_store.multipletelegram_state:
