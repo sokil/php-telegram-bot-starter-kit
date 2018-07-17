@@ -23,3 +23,8 @@ services:
   Sokil\TelegramBot\Service\:
     resource: '../../Service'
 
+  logger:
+    class: Sokil\TelegramBot\Service\Logger\ConsoleLogger
+
+  Psr\Log\LoggerInterface: '@logger'
+

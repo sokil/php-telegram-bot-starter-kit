@@ -124,6 +124,7 @@ class StartPushCommand extends Command
 
         // start HTTP server
         $this->httpServer->create($httpPort);
+
         $output->writeln(
             sprintf('<info>HTTP server started to listen port %d</info>', $httpPort),
             OutputInterface::VERBOSITY_VERBOSE

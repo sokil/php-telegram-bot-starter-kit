@@ -29,7 +29,7 @@ services:
       - event_dispatcher
       - # name
 
-  workflow.marking_store.multiple_state:
+  workflow.marking_store.multipletelegram_state:
     class: Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore
     abstract: true
 

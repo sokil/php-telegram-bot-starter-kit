@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Service\HttpServer;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\Routing\RouterInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -32,18 +33,26 @@ class HttpServer
     private $requestHandlerLocator;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param LoopInterface $eventLoop
      * @param RouterInterface $router
      * @param ServiceLocator $requestHandlerLocator
+     * @param LoggerInterface $logger
      */
     public function __construct(
         LoopInterface $eventLoop,
         RouterInterface $router,
-        ServiceLocator $requestHandlerLocator
+        ServiceLocator $requestHandlerLocator,
+        LoggerInterface $logger
     ) {
         $this->eventLoop = $eventLoop;
         $this->router = $router;
         $this->requestHandlerLocator = $requestHandlerLocator;
+        $this->logger = $logger;
     }
 
     /**
@@ -89,6 +98,8 @@ class HttpServer
                     'Resource not found'
                 );
             } catch (\Throwable $e) {
+                $this->logger->critical('[HTTPServer] ' . $e->getMessage());
+
                 $response = new ReactHttpResponse(
                     500,
                     array('Content-Type' => 'text/plain'),
