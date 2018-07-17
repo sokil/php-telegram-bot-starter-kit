@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Service\ConversationManager;
 
+use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
+
 /**
  * Detect conversation type by initial chat message
  */
@@ -16,12 +18,19 @@ class ConversationDispatcher
     private $conversationClassNames;
 
     /**
+     * @var TelegramBotClientInterface
+     */
+    private $telegramBotClient;
+
+    /**
      * @param string[] $conversationClassNames
      */
     public function __construct(
-        array $conversationClassNames
+        array $conversationClassNames,
+        TelegramBotClientInterface $telegramBotClient
     ) {
         $this->conversationClassNames = $conversationClassNames;
+        $this->telegramBotClient = $telegramBotClient;
     }
 
     /**
@@ -36,13 +45,20 @@ class ConversationDispatcher
         // build new conversation relatively to initial message
         foreach ($this->conversationClassNames as $conversationClassName => $conversationMetadata) {
             $conversationInitialMessagePattern = $conversationMetadata['pattern'];
+
+            // try to match
+            $isMatched = false;
             if ($conversationInitialMessagePattern === $initialConversationMessage) {
                 // direct match
-                $conversation = new $conversationClassName();
+                $isMatched = true;
             } else if (preg_match($conversationInitialMessagePattern, $initialConversationMessage)) {
                 // regex pattern match
-                $conversation = new $conversationClassName();
+                $isMatched = true;
             }
+
+            // if matched - build conversation
+            $conversation = new $conversationClassName($this->telegramBotClient);
+
         }
 
         return $conversation;

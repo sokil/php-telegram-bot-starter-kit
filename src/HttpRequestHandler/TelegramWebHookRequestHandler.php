@@ -70,18 +70,27 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $requestBody = $request->getBody()->getContents();
+
         // debug
         $this->logger->debug(
             '[TelegramWebHookRequestHandler] Request handled',
             [
-                'request' => $request->getBody()->getContents(),
+                'request' => $requestBody,
             ]
         );
 
+
         // handle request
         try {
+            // parse JSON
+            $updateData = json_decode($requestBody, true);
+            if (empty($updateData)) {
+                throw new \RuntimeException('Invalid JSON');
+            }
+
             // build update from request
-            $update = $this->telegramBotClient->buildWebHookUpdateFromRequest($request);
+            $update = $this->telegramBotClient->buildWebHookUpdateFromRequest($updateData);
 
             $userId = $update->getMessage()->getFrom()->getId();
             $messageText = $update->getMessage()->getText();
@@ -92,7 +101,9 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
             // no conversation found, try to init new conversation if detected initial message
             if ($conversation === null) {
                 $conversation = $this->conversationDispatcher->dispatchConversation($messageText);
-                $this->conversationCollection->add($conversation);
+                if ($conversation !== null) {
+                    $this->conversationCollection->add($conversation);
+                }
             }
 
             // route request to related command handler

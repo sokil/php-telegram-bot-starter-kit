@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Service\TelegramBotClient;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiRequestException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiResponseException;
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Message;
@@ -42,7 +42,7 @@ interface TelegramBotClientInterface
     public function getWebHookInfo(): WebhookInfo;
 
     /**
-     * @param RequestInterface $request
+     * @param array $updateData
      *
      * @throws TelegramApiRequestException
      *
@@ -51,7 +51,7 @@ interface TelegramBotClientInterface
      * @see https://core.telegram.org/bots/webhooks#testing-your-bot-with-updates Examples
      * @see https://core.telegram.org/bots/api#update Specification
      */
-    public function buildWebHookUpdateFromRequest(RequestInterface $request): Update;
+    public function buildWebHookUpdateFromRequest(array $updateData): Update;
 
     /**
      * @link https://core.telegram.org/bots/api#sendmessage

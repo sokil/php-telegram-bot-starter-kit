@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Service\TelegramBotClient;
 
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Entities\Update as LongmanTelegramBotUpdate;
@@ -105,25 +105,14 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
     }
 
     /**
-     * @param RequestInterface $request
+     * @param array $updateData
      *
      * @throws TelegramBotServerRequestException
      *
      * @return Update
      */
-    public function buildWebHookUpdateFromRequest(RequestInterface $request): Update
+    public function buildWebHookUpdateFromRequest(array $updateData): Update
     {
-        try {
-            $input = $request->getBody()->getContents();
-        } catch (\Throwable $e) {
-            throw new TelegramBotServerRequestException($e->getMessage(), $e->getCode(), $e);
-        }
-
-        $updateData = json_decode($input, true);
-        if (empty($updateData)) {
-            throw new TelegramBotServerRequestException('Invalid JSON');
-        }
-
         try {
             $update = new LongmanTelegramBotUpdate($updateData);
         } catch (LongmanTelegramBotException $e) {
@@ -155,9 +144,23 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
      * @param string $text
      *
      * @return Message
+     *
+     * @throws TelegramApiRequestException
+     * @throws TelegramApiResponseException
      */
     public function sendMessage(string $chatId, string $text): Message
     {
+        try {
+            $response = Request::sendMessage([
+                'chat_id' => $chatId,
+                'text' => $text,
+            ]);
+        } catch (\Throwable $e) {
+            throw new TelegramApiRequestException($e->getMessage(), $e->getCode(), $e);
+        }
 
+        if (!$response->isOk()) {
+            throw new TelegramApiResponseException($response->getDescription());
+        }
     }
 }
