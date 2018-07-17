@@ -14,7 +14,7 @@ class ConsoleLogger extends AbstractLogger
      */
     private $output;
 
-    private const ERROR_FORMAT = [
+    private const ERROR_FORMAT_MAP = [
         LogLevel::DEBUG => 'comment',
         LogLevel::INFO => 'info',
         LogLevel::NOTICE => 'info',
@@ -24,6 +24,17 @@ class ConsoleLogger extends AbstractLogger
         LogLevel::ALERT => 'error',
         LogLevel::EMERGENCY => 'error',
     ];
+
+    private const VERBOSITY_MAP = array(
+        LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::ALERT => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::CRITICAL => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::ERROR => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::WARNING => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::NOTICE => OutputInterface::VERBOSITY_VERBOSE,
+        LogLevel::INFO => OutputInterface::VERBOSITY_VERY_VERBOSE,
+        LogLevel::DEBUG => OutputInterface::VERBOSITY_DEBUG,
+    );
 
     /**
      * @param OutputInterface $output
@@ -48,13 +59,16 @@ class ConsoleLogger extends AbstractLogger
             );
         }
 
-        $this->output->writeln(sprintf(
-            '<%1$s>[%2$s]</%1$s> %3$s%4$s',
-            self::ERROR_FORMAT[$level] ?? 'error',
-            $level,
-            $message,
-            $contextLogString
-        ));
+        $this->output->writeln(
+            sprintf(
+                '<%1$s>[%2$s]</%1$s> %3$s%4$s',
+                self::ERROR_FORMAT_MAP[$level] ?? 'error',
+                $level,
+                $message,
+                $contextLogString
+            ),
+            self::VERBOSITY_MAP[$level]
+        );
     }
 
 }
