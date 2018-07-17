@@ -1,3 +1,5 @@
 /vendor/
 .env
 runtime
+src/Config/Nginx/
+!src/Config/Nginx/nginx.conf.sample
