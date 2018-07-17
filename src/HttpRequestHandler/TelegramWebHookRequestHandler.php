@@ -102,26 +102,26 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
             if ($conversation === null) {
                 $conversation = $this->conversationDispatcher->dispatchConversation($messageText);
                 if ($conversation !== null) {
-                    $this->conversationCollection->add($conversation);
+                    $this->conversationCollection->add($userId, $conversation);
                 }
             }
 
             // route request to related command handler
             if ($conversation !== null) {
-                // get workflow for conversation
-                $workflow = $this->workflowRegistry->get($conversation);
-
                 // apply update for conversation
                 $nextState = $conversation->apply($update);
 
+                // get workflow for conversation
+                $workflow = $this->workflowRegistry->get($conversation);
+
                 // apply new state for conversation
-                if ($workflow->can($conversation, $nextState)) {
+                if (!empty($nextState) && $workflow->can($conversation, $nextState)) {
                     $workflow->apply($conversation, $nextState);
                 }
 
                 // if conversation finished remove it from collection
                 if (count($workflow->getEnabledTransitions($conversation)) === 0) {
-                    $this->conversationCollection->remove($conversation);
+                    $this->conversationCollection->remove($userId);
                 }
             }
 

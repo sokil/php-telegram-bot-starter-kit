@@ -61,9 +61,10 @@ class ConsoleLogger extends AbstractLogger
 
         $this->output->writeln(
             sprintf(
-                '<%1$s>[%2$s]</%1$s> %3$s%4$s',
+                '<%1$s>[%2$s]</%1$s>[%3$s] %4$s%5$s',
                 self::ERROR_FORMAT_MAP[$level] ?? 'error',
                 $level,
+                date('Y-m-d H:i:s'),
                 $message,
                 $contextLogString
             ),

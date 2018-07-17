@@ -14,10 +14,10 @@ class HelpConversation extends AbstractConversation
     /**
      * @param Update $update
      *
-     * @return string
+     * @return string|null
      */
-    public function apply(Update $update): string
+    public function apply(Update $update): ?string
     {
-
+        return null;
     }
 }

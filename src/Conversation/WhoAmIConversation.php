@@ -11,9 +11,9 @@ class WhoAmIConversation extends AbstractConversation
     /**
      * @param Update $update
      *
-     * @return string
+     * @return string|null Next state
      */
-    public function apply(Update $update): string
+    public function apply(Update $update): ?string
     {
         $chatId = $update->getMessage()->getChat()->getId();
 
@@ -34,5 +34,7 @@ class WhoAmIConversation extends AbstractConversation
             (string)$chatId,
             $message
         );
+
+        return null;
     }
 }

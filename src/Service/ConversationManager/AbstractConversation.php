@@ -41,7 +41,7 @@ abstract class AbstractConversation
     /**
      * @param Update $update
      *
-     * @return string Next state
+     * @return string|null Next state
      */
-    abstract public function apply(Update $update): string;
+    abstract public function apply(Update $update): ?string;
 }

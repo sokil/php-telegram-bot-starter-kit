@@ -162,5 +162,23 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
         if (!$response->isOk()) {
             throw new TelegramApiResponseException($response->getDescription());
         }
+
+        /** @var \Longman\TelegramBot\Entities\Message $message */
+        $message = $response->getResult();
+
+        // @todo duplicate Message object build, same with buildWebHookUpdateFromRequest
+        return new Message(
+            new Chat(
+                $message->getChat()->getId(),
+                new ChatType($message->getChat()->getType())
+            ),
+            new User(
+                $message->getFrom()->getId(),
+                $message->getFrom()->getFirstName(),
+                $message->getFrom()->getLastName(),
+                $message->getFrom()->getUsername()
+            ),
+            $message->getText()
+        );
     }
 }

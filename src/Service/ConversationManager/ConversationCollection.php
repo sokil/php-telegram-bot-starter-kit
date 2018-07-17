@@ -14,11 +14,12 @@ class ConversationCollection
     private $collectionByUserId;
 
     /**
+     * @param int $userId
      * @param AbstractConversation $conversation
      */
-    public function add(AbstractConversation $conversation): void
+    public function add(int $userId, AbstractConversation $conversation): void
     {
-        $this->collectionByUserId[$conversation->getWithUserId()] = $conversation;
+        $this->collectionByUserId[$userId] = $conversation;
     }
 
     /**
@@ -32,10 +33,10 @@ class ConversationCollection
     }
 
     /**
-     * @param AbstractConversation $conversation
+     * @param int $userId
      */
-    public function remove(AbstractConversation $conversation): void
+    public function remove(int $userId): void
     {
-        unset($this->collectionByUserId[$conversation->getWithUserId()]);
+        unset($this->collectionByUserId[$userId]);
     }
 }
