@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokikl\TelegramBot\Conversation;
+namespace Sokil\TelegramBot\Conversation;
 
-use Sokil\TelegramBot\ConversationManager\AbstractConversation;
+use Sokil\TelegramBot\Service\ConversationManager\AbstractConversation;
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Update;
 
 /**
@@ -12,16 +12,11 @@ use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Update;
 class HelpConversation extends AbstractConversation
 {
     /**
-     * Populated with workflow
-     *
-     * @var string
-     */
-    private $state;
-
-    /**
      * @param Update $update
+     *
+     * @return string
      */
-    public function apply(Update $update): void
+    public function apply(Update $update): string
     {
 
     }

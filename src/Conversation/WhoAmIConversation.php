@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokikl\TelegramBot\Conversation;
+namespace Sokil\TelegramBot\Conversation;
 
 use Sokil\TelegramBot\Service\ConversationManager\AbstractConversation;
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Update;
@@ -10,8 +10,10 @@ class WhoAmIConversation extends AbstractConversation
 {
     /**
      * @param Update $update
+     *
+     * @return string
      */
-    public function apply(Update $update): void
+    public function apply(Update $update): string
     {
         $chatId = $update->getMessage()->getChat()->getId();
 
