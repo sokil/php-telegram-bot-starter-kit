@@ -31,7 +31,7 @@ class WhoAmIConversation extends AbstractConversation
         );
 
         $this->telegramBotClient->sendMessage(
-            $chatId,
+            (string)$chatId,
             $message
         );
     }

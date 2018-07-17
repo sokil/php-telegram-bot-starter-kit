@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Sokil\TelegramBot\Service\ConversationManager\DependencyInjection\Compilerpass;
+namespace Sokil\TelegramBot\Service\ConversationManager\DependencyInjection\CompilerPass;
 
 use Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -17,7 +17,7 @@ class ConversationLocatorPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // read yaml config
-        $yamlConfigPath = $container->getParameterBag()->get('kernel.config_dir') . '/workflows.yml';
+        $yamlConfigPath = $container->getParameterBag()->get('kernel.config_dir') . '/conversations.yml';
         $yamlParser = new YamlParser();
         $config = $yamlParser->parseFile(
             $yamlConfigPath,

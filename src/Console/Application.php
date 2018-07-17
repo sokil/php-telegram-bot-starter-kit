@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Console;
 
+use Sokil\TelegramBot\Service\ConversationManager\DependencyInjection\CompilerPass\ConversationLocatorPass;
 use Sokil\TelegramBot\Service\Logger\ConsoleLogger;
 use Sokil\TelegramBot\Service\Workflow\DependencyInjection\CompilerPass\WorkflowBuildCompilerPass;
 use Symfony\Component\Console\ConsoleEvents;
@@ -97,6 +98,7 @@ class Application
             );
 
             $containerBuilder->addCompilerPass(new WorkflowBuildCompilerPass());
+            $containerBuilder->addCompilerPass(new ConversationLocatorPass());
 
             // allow autoconfiguration
             $containerBuilder

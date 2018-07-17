@@ -23,13 +23,14 @@ class ConversationDispatcher
     private $telegramBotClient;
 
     /**
-     * @param string[] $conversationClassNames
+     * @param array[] $conversationDefinitions See format in "Config/conversations.yml"
+     * @param TelegramBotClientInterface $telegramBotClient
      */
     public function __construct(
-        array $conversationClassNames,
+        array $conversationDefinitions,
         TelegramBotClientInterface $telegramBotClient
     ) {
-        $this->conversationClassNames = $conversationClassNames;
+        $this->conversationClassNames = $conversationDefinitions;
         $this->telegramBotClient = $telegramBotClient;
     }
 
@@ -44,21 +45,21 @@ class ConversationDispatcher
 
         // build new conversation relatively to initial message
         foreach ($this->conversationClassNames as $conversationClassName => $conversationMetadata) {
-            $conversationInitialMessagePattern = $conversationMetadata['pattern'];
-
             // try to match
             $isMatched = false;
-            if ($conversationInitialMessagePattern === $initialConversationMessage) {
+            if (isset($conversationMetadata['command']) && $conversationMetadata['command'] === $initialConversationMessage) {
                 // direct match
                 $isMatched = true;
-            } else if (preg_match($conversationInitialMessagePattern, $initialConversationMessage)) {
+            } else if (isset($conversationMetadata['regex']) && preg_match($conversationMetadata['regex'], $initialConversationMessage)) {
                 // regex pattern match
                 $isMatched = true;
             }
 
             // if matched - build conversation
-            $conversation = new $conversationClassName($this->telegramBotClient);
-
+            if ($isMatched) {
+                $conversation = new $conversationClassName($this->telegramBotClient);
+                break;
+            }
         }
 
         return $conversation;

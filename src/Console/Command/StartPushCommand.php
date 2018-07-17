@@ -81,6 +81,12 @@ class StartPushCommand extends Command
                 'HTTP port to listen callbacks from Telegram',
                 self::DEFAULT_HTTP_PORT
             )
+            ->addOption(
+                'skipCheckWebHookUrl',
+                '',
+                InputOption::VALUE_NONE,
+                'Do not check correct webhook and try to set it otherwise'
+            )
             ->setDescription('Run bot server and get updates from webhooks');
     }
 
@@ -92,39 +98,41 @@ class StartPushCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // build absolute URL to webhook
-        $telegramWebHookUrl = $this->router->generate(
-            'telegramWebHook',
-            [],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        if (!$input->getOption('skipCheckWebHookUrl')) {
+            // build absolute URL to webhook
+            $telegramWebHookUrl = $this->router->generate(
+                'telegramWebHook',
+                [],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
 
-        try {
-            // check if webhook configured
-            $webHookInfo = $this->telegram->getWebHookInfo();
-            if ($webHookInfo->getUrl() === null) {
-                // set web hook
-                $output->writeln(
-                    sprintf('<info>Setting web hook to %s</info>', $webHookInfo->getUrl()),
-                    OutputInterface::VERBOSITY_VERBOSE
-                );
+            try {
+                // check if webhook configured
+                $webHookInfo = $this->telegram->getWebHookInfo();
+                if ($webHookInfo->getUrl() === null) {
+                    // set web hook
+                    $output->writeln(
+                        sprintf('<info>Setting web hook to %s</info>', $webHookInfo->getUrl()),
+                        OutputInterface::VERBOSITY_VERBOSE
+                    );
 
-                $this->telegram->setWebhook($telegramWebHookUrl);
-            } else if ($webHookInfo->getUrl() !== $telegramWebHookUrl) {
-                $output->writeln(
-                    sprintf(
-                        '<info>Web hook already set to %s, replace with %s</info>',
-                        $webHookInfo->getUrl(),
-                        $telegramWebHookUrl
-                    ),
-                    OutputInterface::VERBOSITY_VERBOSE
-                );
+                    $this->telegram->setWebhook($telegramWebHookUrl);
+                } else if ($webHookInfo->getUrl() !== $telegramWebHookUrl) {
+                    $output->writeln(
+                        sprintf(
+                            '<info>Web hook already set to %s, replace with %s</info>',
+                            $webHookInfo->getUrl(),
+                            $telegramWebHookUrl
+                        ),
+                        OutputInterface::VERBOSITY_VERBOSE
+                    );
 
-                $this->telegram->setWebhook($telegramWebHookUrl);
+                    $this->telegram->setWebhook($telegramWebHookUrl);
+                }
+            } catch (\Throwable $e) {
+                $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
+                return 1;
             }
-        } catch (\Throwable $e) {
-            $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
-            return 1;
         }
 
         $httpPort = (int)$input->getOption('httpPort');
