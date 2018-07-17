@@ -41,8 +41,14 @@ class Application
     public function run(): void
     {
         // load env configuration
+        $configPath = $this->projectDir . '/.env';
+        if (!is_readable($configPath)) {
+            echo 'Please, create .env file in project root dir.' . PHP_EOL;
+            return;
+        }
+
         $dotEnv = new Dotenv();
-        $dotEnv->load($this->projectDir . '/.env');
+        $dotEnv->load($configPath);
 
         // configure environment
         $inputArguments = new ArgvInput();
