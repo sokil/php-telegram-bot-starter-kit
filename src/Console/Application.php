@@ -20,7 +20,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Workflow\Definition;
 
 class Application
 {
@@ -68,6 +67,7 @@ class Application
 
         // directories
         $configDir = $this->projectDir . '/src/Config';
+        $resourceDir = $this->projectDir . '/src/Resource';
         $cacheDir =  $this->projectDir . '/runtime/cache/' . $environment;
         $logsDir = $this->projectDir . '/runtime/logs/' . $environment;
 
@@ -86,6 +86,7 @@ class Application
                 'kernel.environment' => $environment,
                 'kernel.debug' => $isDebug,
                 'kernel.config_dir' => $configDir,
+                'kernel.resource_dir' => $resourceDir,
                 'kernel.cache_dir' => $cacheDir,
                 'kernel.logs_dir' => $logsDir,
             ]);

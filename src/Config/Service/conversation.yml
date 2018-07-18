@@ -2,12 +2,26 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
-    public: false
+    public: true
 
+  ####################################################################
+  # Common services                                                  #
+  ####################################################################
+  Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher:
+    class: Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher
+    public: false
+    arguments:
+      - [] # conversations collection
+      - '@service_container'
+
+  ####################################################################
+  # Conversations                                                    #
+  ####################################################################
   Sokil\TelegramBot\Conversation\:
     resource: '../../Conversation/'
 
-  Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher:
-    class: Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher
+  Sokil\TelegramBot\Conversation\HelpConversation:
+    class: Sokil\TelegramBot\Conversation\HelpConversation
     arguments:
-      - [] # conversations collection
+      - '@Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface'
+      - '@resource_file_locator'

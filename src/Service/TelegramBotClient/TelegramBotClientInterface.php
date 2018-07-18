@@ -9,6 +9,7 @@ use Sokil\TelegramBot\Service\TelegramBotClient\Exception\TelegramApiResponseExc
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Message;
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Update;
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\WebHookInfo;
+use Sokil\TelegramBot\Service\TelegramBotClient\Type\ParseMode;
 
 interface TelegramBotClientInterface
 {
@@ -58,8 +59,9 @@ interface TelegramBotClientInterface
      *
      * @param string $chatId Unique identifier for the target chat or username of the target channel (in the format @channelusername)
      * @param string $text Text of the message to be sent
+     * @param ParseMode|null $parseMode
      *
      * @return Message
      */
-    public function sendMessage(string $chatId, string $text): Message;
+    public function sendMessage(string $chatId, string $text, ParseMode $parseMode = null): Message;
 }

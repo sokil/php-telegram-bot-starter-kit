@@ -3,4 +3,4 @@ conversations:
     command: "/whoami"
 
   Sokil\TelegramBot\Conversation\HelpConversation:
-    comamnd: "/help"
+    command: "/help"

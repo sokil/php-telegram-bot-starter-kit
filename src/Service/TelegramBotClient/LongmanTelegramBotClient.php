@@ -17,6 +17,7 @@ use Sokil\TelegramBot\Service\TelegramBotClient\Struct\Message;
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\User;
 use Sokil\TelegramBot\Service\TelegramBotClient\Struct\WebHookInfo;
 use Sokil\TelegramBot\Service\TelegramBotClient\Type\ChatType;
+use Sokil\TelegramBot\Service\TelegramBotClient\Type\ParseMode;
 
 /**
  * Adapter to Longman's Telegram API client
@@ -142,18 +143,20 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
     /**
      * @param string $chatId
      * @param string $text
+     * @param ParseMode|null $parseMode
      *
      * @return Message
      *
      * @throws TelegramApiRequestException
      * @throws TelegramApiResponseException
      */
-    public function sendMessage(string $chatId, string $text): Message
+    public function sendMessage(string $chatId, string $text, ParseMode $parseMode = null): Message
     {
         try {
             $response = Request::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $text,
+                'parse_mode' => $parseMode ? $parseMode->getValue() : null,
             ]);
         } catch (\Throwable $e) {
             throw new TelegramApiRequestException($e->getMessage(), $e->getCode(), $e);

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Service\ConversationManager;
 
-use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface as ConversationLocator;
 
 /**
  * Detect conversation type by initial chat message
@@ -11,27 +11,27 @@ use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
 class ConversationDispatcher
 {
     /**
-     * Map  class name of conversation to initial message pattern
+     * Map service id of conversation to conversation parameters collection
      *
      * @var array
      */
-    private $conversationClassNames;
+    private $conversationDefinitions;
 
     /**
-     * @var TelegramBotClientInterface
+     * @var ConversationLocator
      */
-    private $telegramBotClient;
+    private $conversationLocator;
 
     /**
      * @param array[] $conversationDefinitions See format in "Config/conversations.yml"
-     * @param TelegramBotClientInterface $telegramBotClient
+     * @param ConversationLocator $conversationLocator
      */
     public function __construct(
         array $conversationDefinitions,
-        TelegramBotClientInterface $telegramBotClient
+        ConversationLocator $conversationLocator
     ) {
-        $this->conversationClassNames = $conversationDefinitions;
-        $this->telegramBotClient = $telegramBotClient;
+        $this->conversationDefinitions = $conversationDefinitions;
+        $this->conversationLocator = $conversationLocator;
     }
 
     /**
@@ -44,7 +44,7 @@ class ConversationDispatcher
         $conversation = null;
 
         // build new conversation relatively to initial message
-        foreach ($this->conversationClassNames as $conversationClassName => $conversationMetadata) {
+        foreach ($this->conversationDefinitions as $conversationServiceId => $conversationMetadata) {
             // try to match
             $isMatched = false;
             if (isset($conversationMetadata['command']) && $conversationMetadata['command'] === $initialConversationMessage) {
@@ -57,7 +57,7 @@ class ConversationDispatcher
 
             // if matched - build conversation
             if ($isMatched) {
-                $conversation = new $conversationClassName($this->telegramBotClient);
+                $conversation = $this->conversationLocator->get($conversationServiceId);
                 break;
             }
         }
