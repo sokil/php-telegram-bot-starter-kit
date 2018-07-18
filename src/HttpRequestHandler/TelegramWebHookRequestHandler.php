@@ -11,6 +11,7 @@ use React\Http\Response;
 use Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
 use Sokil\TelegramBot\Service\ConversationManager\ConversationCollection;
+use Symfony\Component\Workflow\Exception\InvalidArgumentException;
 use Symfony\Component\Workflow\Registry as WorkflowRegistry;
 
 /**
@@ -114,16 +115,23 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
                     $nextState = $conversation->apply($update);
 
                     // get workflow for conversation
-                    $workflow = $this->workflowRegistry->get($conversation);
-
-                    // apply new state for conversation
-                    if (!empty($nextState) && $workflow->can($conversation, $nextState)) {
-                        $workflow->apply($conversation, $nextState);
+                    try {
+                        $workflow = $this->workflowRegistry->get($conversation);
+                    } catch (InvalidArgumentException $e) {
+                        $workflow = null;
                     }
 
-                    // if conversation finished remove it from collection
-                    if (count($workflow->getEnabledTransitions($conversation)) === 0) {
-                        $this->conversationCollection->remove($userId);
+                    // apply workflow logic if present
+                    if ($workflow !== null) {
+                        // apply new state for conversation
+                        if (!empty($nextState) && $workflow->can($conversation, $nextState)) {
+                            $workflow->apply($conversation, $nextState);
+                        }
+
+                        // if conversation finished remove it from collection
+                        if (count($workflow->getEnabledTransitions($conversation)) === 0) {
+                            $this->conversationCollection->remove($userId);
+                        }
                     }
                 }
             } else {
