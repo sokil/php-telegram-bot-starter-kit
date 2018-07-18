@@ -33,6 +33,11 @@ class WorkflowBuildCompilerPass implements CompilerPassInterface
             Yaml::PARSE_CONSTANT | Yaml::PARSE_CUSTOM_TAGS
         );
 
+        // validate config
+        if (empty($config['workflows']) || !is_array($config['workflows'])) {
+            return;
+        }
+
         $registryDefinition = $container->getDefinition('workflow.registry');
 
         // register workflows
