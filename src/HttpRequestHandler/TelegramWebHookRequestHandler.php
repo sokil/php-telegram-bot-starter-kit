@@ -74,7 +74,7 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
 
         // debug
         $this->logger->debug(
-            '[TelegramWebHookRequestHandler] Request handled',
+            '[TelegramWebHookRequestHandler] Request accepted',
             [
                 'request' => $requestBody,
             ]
@@ -95,34 +95,39 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
             $userId = $update->getMessage()->getFrom()->getId();
             $messageText = $update->getMessage()->getText();
 
-            // try to get already started conversation
-            $conversation = $this->conversationCollection->getByUserId($userId);
+            // handle only textual messages
+            if ($messageText !== null) {
+                // try to get already started conversation
+                $conversation = $this->conversationCollection->getByUserId($userId);
 
-            // no conversation found, try to init new conversation if detected initial message
-            if ($conversation === null) {
-                $conversation = $this->conversationDispatcher->dispatchConversation($messageText);
+                // no conversation found, try to init new conversation if detected initial message
+                if ($conversation === null) {
+                    $conversation = $this->conversationDispatcher->dispatchConversation($messageText);
+                    if ($conversation !== null) {
+                        $this->conversationCollection->add($userId, $conversation);
+                    }
+                }
+
+                // route request to related command handler
                 if ($conversation !== null) {
-                    $this->conversationCollection->add($userId, $conversation);
+                    // apply update for conversation
+                    $nextState = $conversation->apply($update);
+
+                    // get workflow for conversation
+                    $workflow = $this->workflowRegistry->get($conversation);
+
+                    // apply new state for conversation
+                    if (!empty($nextState) && $workflow->can($conversation, $nextState)) {
+                        $workflow->apply($conversation, $nextState);
+                    }
+
+                    // if conversation finished remove it from collection
+                    if (count($workflow->getEnabledTransitions($conversation)) === 0) {
+                        $this->conversationCollection->remove($userId);
+                    }
                 }
-            }
-
-            // route request to related command handler
-            if ($conversation !== null) {
-                // apply update for conversation
-                $nextState = $conversation->apply($update);
-
-                // get workflow for conversation
-                $workflow = $this->workflowRegistry->get($conversation);
-
-                // apply new state for conversation
-                if (!empty($nextState) && $workflow->can($conversation, $nextState)) {
-                    $workflow->apply($conversation, $nextState);
-                }
-
-                // if conversation finished remove it from collection
-                if (count($workflow->getEnabledTransitions($conversation)) === 0) {
-                    $this->conversationCollection->remove($userId);
-                }
+            } else {
+                $this->logger->debug('[TelegramWebHookRequestHandler] Skip handling not textual message');
             }
 
             // build response
