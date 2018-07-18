@@ -121,7 +121,7 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
                         $workflow = null;
                     }
 
-                    // apply workflow logic if present
+                    // apply workflow logic if present, or finish command execution
                     if ($workflow !== null) {
                         // apply new state for conversation
                         if (!empty($nextState) && $workflow->can($conversation, $nextState)) {
@@ -132,6 +132,9 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
                         if (count($workflow->getEnabledTransitions($conversation)) === 0) {
                             $this->conversationCollection->remove($userId);
                         }
+                    } else {
+                        // finish command execution
+                        $this->conversationCollection->remove($userId);
                     }
                 }
             } else {
