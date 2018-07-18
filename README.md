@@ -7,3 +7,7 @@ Fully featured infrastructure to organize your telegram bot. Just add your dialo
 ```
 composer create-project sokil/php-telegram-bot-starter-kit
 ```
+
+## Add new conversation
+
+Coming soon...
