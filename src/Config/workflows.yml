@@ -1,19 +1,19 @@
 workflows:
-  conversation_help:
-    type: 'state_machine'
-    marking_store:
-      type: 'single_state'
-      arguments:
-        - 'state'
-    supports:
-      - \Sokil\TelegramBot\Conversation\HelpConversation
-    initial_place: menu_not_shown
-    places:
-      - menu_not_shown
-      - menu_shown
-      - menu_item_clicked
-      - menu_item_shown
-    transitions:
-      show_meny:
-        from: menu_not_shown
-        to: menu_shown
+#  sample_workflow:
+#    type: 'state_machine'
+#    marking_store:
+#      type: 'single_state'
+#      arguments:
+#        - 'state'
+#    supports:
+#      - \Sokil\TelegramBot\Conversation\SampleWorkflowConversation
+#    initial_place: menu_not_shown
+#    places:
+#      - menu_not_shown
+#      - menu_shown
+#      - menu_item_clicked
+#      - menu_item_shown
+#    transitions:
+#      show_meny:
+#        from: menu_not_shown
+#        to: menu_shown
