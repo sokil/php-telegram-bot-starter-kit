@@ -26,7 +26,7 @@ class ConversationLocatorPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // read yaml config
-        $yamlConfigPath = $container->getParameterBag()->get('kernel.config_dir') . '/conversations.yml';
+        $yamlConfigPath = $container->getParameterBag()->get('project.config_dir') . '/conversations.yml';
         $yamlParser = new YamlParser();
         $config = $yamlParser->parseFile(
             $yamlConfigPath,

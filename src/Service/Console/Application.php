@@ -111,6 +111,8 @@ class Application
 
             // add parameters
             $containerBuilder->getParameterBag()->add([
+                // common
+                'isProjectMode' => $this->isProjectMode,
                 // kernel vars
                 'kernel.environment' => $environment,
                 'kernel.debug' => $isDebug,
