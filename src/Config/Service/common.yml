@@ -7,12 +7,12 @@ services:
   config_file_locator:
     class: Symfony\Component\Config\FileLocator
     arguments:
-      - ['%kernel.config_dir%']
+      - ['%project.config_dir%', '%kernel.config_dir%']
 
   resource_file_locator:
     class: Symfony\Component\Config\FileLocator
     arguments:
-      - ['%kernel.resource_dir%']
+      - ['%project.resource_dir%', '%kernel.resource_dir%']
 
   event_dispatcher:
     public: true

@@ -36,15 +36,30 @@ class Application
     public const ENVIRONMENT_PROD = 'prod';
 
     /**
+     * Directory where library's composer.json placed
+     *
+     * If this library installed as project, then kerned and project dirs are same.
+     *
+     * @var string
+     */
+    private $kernelDir;
+
+    /**
+     * Directory where user code and project's composer.json placed.
+     *
+     * If this library installed as project, then kerned and project dirs are same.
+     *
      * @var string
      */
     private $projectDir;
 
     /**
+     * @param string $kernelDir
      * @param string $projectDir
      */
-    public function __construct(string $projectDir)
+    public function __construct(string $kernelDir, string $projectDir)
     {
+        $this->kernelDir = $kernelDir;
         $this->projectDir = $projectDir;
     }
 
@@ -75,10 +90,7 @@ class Application
         $isDebug = (bool)($_SERVER['APP_ENV'] ?? ($environment !== self::ENVIRONMENT_PROD));
 
         // directories
-        $configDir = $this->projectDir . '/src/Config';
-        $resourceDir = $this->projectDir . '/src/Resource';
         $cacheDir =  $this->projectDir . '/runtime/cache/' . $environment;
-        $logsDir = $this->projectDir . '/runtime/logs/' . $environment;
 
         // init dependency injection container
         $containerConfigCache = new ConfigCache(
@@ -91,26 +103,26 @@ class Application
 
             // add parameters
             $containerBuilder->getParameterBag()->add([
-                'kernel.project_dir' => $this->projectDir,
+                // kernel vars
                 'kernel.environment' => $environment,
                 'kernel.debug' => $isDebug,
-                'kernel.config_dir' => $configDir,
-                'kernel.resource_dir' => $resourceDir,
-                'kernel.cache_dir' => $cacheDir,
-                'kernel.logs_dir' => $logsDir,
+                'kernel.dir' => $this->projectDir,
+                'kernel.config_dir' => $this->kernelDir . '/src/Config',
+                'kernel.resource_dir' => $this->kernelDir . '/src/Resource',
+                // project vars
+                'project.dir' => $this->projectDir,
+                'project.config_dir' => $this->projectDir . '/src/Config',
+                'project.resource_dir' => $this->projectDir . '/src/Resource',
+                'project.cache_dir' => $cacheDir,
+                'project.logs_dir' => $this->projectDir . '/runtime/logs/' . $environment,
             ]);
 
             // add compiler passes
-            $containerBuilder->addCompilerPass(
-                new AddConsoleCommandPass(),
-                PassConfig::TYPE_BEFORE_REMOVING,
-                0
-            );
-
             $containerBuilder->addCompilerPass(new WorkflowBuildCompilerPass());
             $containerBuilder->addCompilerPass(new ConversationLocatorPass());
 
-            // allow autoconfiguration
+            // allow autoconfiguration and lazy add of console commands (used by service 'console.command_loader')
+            $containerBuilder->addCompilerPass(new AddConsoleCommandPass(), PassConfig::TYPE_BEFORE_REMOVING, 0);
             $containerBuilder
                 ->registerForAutoconfiguration(Command::class)
                 ->addTag('console.command');
@@ -118,7 +130,10 @@ class Application
             // load services from config
             $serviceConfigLoader = new DependencyInjectionYamlFileLoader(
                 $containerBuilder,
-                new FileLocator($this->projectDir . '/src/Config/Service')
+                new FileLocator([
+                    $this->projectDir . '/src/Config/Service',
+                    $this->kernelDir . '/src/Config/Service',
+                ])
             );
 
             $serviceConfigLoader->load('consoleCommands.yml');
@@ -128,6 +143,7 @@ class Application
             $serviceConfigLoader->load('telegramApi.yml');
             $serviceConfigLoader->load('workflow.yml');
 
+            // compile container
             $containerBuilder->compile();
 
             // dump compiled container to cache

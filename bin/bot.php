@@ -3,31 +3,40 @@ declare(strict_types=1);
 
 use Sokil\TelegramBot\Service\Console\Application;
 
-// find and load autoloader
-$autoloadPathList = array(
-    // phar, global install, dev
-    __DIR__ . '/../vendor/autoload.php',
-    // install to vendor/bin
-    __DIR__ . '/../../../autoload.php'
-);
+/**
+ * @return null|string
+ */
+function locateAutoloadFilePath(): ?string
+{
+    // find and load autoloader
+    $autoloadPathList = array(
+        // phar, global install, dev
+        __DIR__ . '/../vendor/autoload.php',
+        // install to vendor/bin
+        __DIR__ . '/../../../autoload.php'
+    );
 
-// locate project dir and run autoloader
-$projectDir = null;
-foreach ($autoloadPathList as $autoloadPath) {
-    if (file_exists($autoloadPath)) {
-        // define root of project
-        $projectDir = dirname(dirname($autoloadPath));
-        // run autoloader
-        require_once $autoloadPath;
-        break;
+    foreach ($autoloadPathList as $autoloadPath) {
+        if (file_exists($autoloadPath)) {
+            return $autoloadPath;
+        }
     }
 }
 
-// handle error about not installed project
-if ($projectDir === null) {
+// run autoloader
+$autoloadPath = locateAutoloadFilePath();
+if ($autoloadPath === null) {
     echo 'Please, install composer dependencies...';
+    exit(1);
 }
 
+require_once $autoloadPath;
+
+// define directories
+$kernelDir = __DIR__ . '/../';
+$projectDir = dirname(dirname($autoloadPath));
+
+
 // run app
-$application = new Application($projectDir);
+$application = new Application($kernelDir, $projectDir);
 $application->run();

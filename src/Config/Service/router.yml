@@ -32,7 +32,7 @@ services:
     arguments:
       - '@router.config_file_loader'
       - 'routes.yml'
-      - {cache_dir: '%kernel.cache_dir%/'}
+      - {cache_dir: '%project.cache_dir%/'}
       - '@router.request_context'
 
   ####################################################################
