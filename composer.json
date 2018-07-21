@@ -33,5 +33,9 @@
         "psr-4": {
             "Sokil\\TelegramBot\\": "tests/"
         }
-    }
+    },
+    "bin": [
+        "bin/bot",
+        "bin/bot.php"
+    ]
 }

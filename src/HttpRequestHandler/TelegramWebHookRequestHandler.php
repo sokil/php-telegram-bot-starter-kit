@@ -1,6 +1,15 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * This file is part of the PHP Telegram Starter Kit.
+ *
+ * (c) Dmytro Sokil <dmytro.sokil@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sokil\TelegramBot\HttpRequestHandler;
 
 use Psr\Http\Message\ResponseInterface;
@@ -8,9 +17,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use React\Http\Response;
+use Sokil\TelegramBot\Service\ConversationManager\ConversationCollection\ConversationCollectionInterface;
 use Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
-use Sokil\TelegramBot\Service\ConversationManager\ConversationCollection;
+use Sokil\TelegramBot\Service\ConversationManager\ConversationCollection\InMemoryConversationCollection;
 use Symfony\Component\Workflow\Exception\InvalidArgumentException;
 use Symfony\Component\Workflow\Registry as WorkflowRegistry;
 
@@ -25,7 +35,7 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
     private $telegramBotClient;
 
     /**
-     * @var ConversationCollection
+     * @var ConversationCollectionInterface
      */
     private $conversationCollection;
 
@@ -47,13 +57,13 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
     /**
      * @param TelegramBotClientInterface $telegramBotClient
      * @param ConversationDispatcher $conversationDispatcher
-     * @param ConversationCollection $conversationCollection
+     * @param ConversationCollectionInterface $conversationCollection
      * @param WorkflowRegistry $workflowRegistry
      */
     public function __construct(
         TelegramBotClientInterface $telegramBotClient,
         ConversationDispatcher $conversationDispatcher,
-        ConversationCollection $conversationCollection,
+        ConversationCollectionInterface $conversationCollection,
         WorkflowRegistry $workflowRegistry,
         LoggerInterface $logger
     ) {
