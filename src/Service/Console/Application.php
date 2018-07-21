@@ -54,6 +54,13 @@ class Application
     private $projectDir;
 
     /**
+     * If library installed as project and project dir also is kernel dir
+     *
+     * @var bool
+     */
+    private $isProjectMode;
+
+    /**
      * @param string $kernelDir
      * @param string $projectDir
      */
@@ -61,6 +68,7 @@ class Application
     {
         $this->kernelDir = $kernelDir;
         $this->projectDir = $projectDir;
+        $this->isProjectMode = $projectDir === $kernelDir;
     }
 
     /**
@@ -136,12 +144,13 @@ class Application
                 ])
             );
 
+            $serviceConfigLoader->load('application.yml');
             $serviceConfigLoader->load('consoleCommands.yml');
-            $serviceConfigLoader->load('common.yml');
             $serviceConfigLoader->load('conversation.yml');
             $serviceConfigLoader->load('router.yml');
             $serviceConfigLoader->load('telegramApi.yml');
             $serviceConfigLoader->load('workflow.yml');
+            $serviceConfigLoader->load('projectServices.yml'); // load services from project dir in library mode
 
             // compile container
             $containerBuilder->compile();
