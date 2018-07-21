@@ -18,15 +18,15 @@ namespace Sokil\TelegramBot\Service\TelegramBotClient\Struct;
 class WebHookInfo
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $url;
 
     /**
      * WebHookInfo constructor.
-     * @param string $url
+     * @param string|null $url
      */
-    public function __construct(string $url)
+    public function __construct(?string $url)
     {
         $this->url = $url;
     }

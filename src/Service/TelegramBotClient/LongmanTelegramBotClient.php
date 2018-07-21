@@ -108,7 +108,7 @@ class LongmanTelegramBotClient implements TelegramBotClientInterface
         $result = $response->getResult();
 
         $webHookInfo = new WebHookInfo(
-            $result->getUrl()
+            $result->getUrl() ? $result->getUrl() : null
         );
 
         return $webHookInfo;
