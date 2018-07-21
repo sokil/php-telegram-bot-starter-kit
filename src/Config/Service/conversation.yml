@@ -17,6 +17,7 @@ services:
       - '@Symfony\Component\Workflow\Registry'
 
   Sokil\TelegramBot\Service\ConversationManager\ConversationCollection\ConversationCollectionInterface:
+    public: false
     class: Sokil\TelegramBot\Service\ConversationManager\ConversationCollection\InMemoryConversationCollection
 
   ####################################################################
