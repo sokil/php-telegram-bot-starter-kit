@@ -1,5 +1,5 @@
 parameters:
-  router.request_context.host: '%env(HTTP_HOSTNAME)%'
+  router.request_context.host: '%env(WEBHOOK_HOSTNAME)%'
   router.request_context.scheme: 'https'
   router.request_context.base_url: ''
 

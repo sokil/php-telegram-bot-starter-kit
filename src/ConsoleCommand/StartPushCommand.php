@@ -82,13 +82,18 @@ class StartPushCommand extends Command
      */
     protected function configure()
     {
+        $webHookPort = getenv('WEBHOOK_PORT');
+        if ($webHookPort === false) {
+            $webHookPort = self::DEFAULT_HTTP_PORT;
+        }
+
         $this
             ->addOption(
                 'httpPort',
                 'p',
                 InputOption::VALUE_OPTIONAL,
                 'HTTP port to listen callbacks from Telegram',
-                self::DEFAULT_HTTP_PORT
+                $webHookPort
             )
             ->addOption(
                 'skipCheckWebHookUrl',
