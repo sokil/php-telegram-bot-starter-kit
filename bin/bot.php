@@ -18,7 +18,7 @@ function locateAutoloadFilePath(): ?string
 
     foreach ($autoloadPathList as $autoloadPath) {
         if (file_exists($autoloadPath)) {
-            return $autoloadPath;
+            return realpath($autoloadPath);
         }
     }
 }
