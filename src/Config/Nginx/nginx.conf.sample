@@ -7,7 +7,7 @@ server
     error_log /var/log/nginx/{SERVER_NAME}.error.log info;
     access_log /var/log/nginx/{SERVER_NAME}.access.log;
 
-    location \
+    location /
     {
         proxy_pass http://localhost:8080/;
     }
