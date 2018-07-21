@@ -33,7 +33,7 @@ if ($autoloadPath === null) {
 require_once $autoloadPath;
 
 // define directories
-$kernelDir = __DIR__ . '/../';
+$kernelDir = realpath(__DIR__ . '/../');
 $projectDir = dirname(dirname($autoloadPath));
 
 
