@@ -10,7 +10,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sokil\TelegramBot\Console\Command;
+namespace Sokil\TelegramBot\ConsoleCommand;
 
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
 use Symfony\Component\Console\Command\Command;
@@ -38,7 +38,7 @@ class StartPullCommand extends Command
     private $telegram;
 
     /**
-     * @param Telegram $telegram
+     * @param TelegramBotClientInterface $telegram
      */
     public function __construct(TelegramBotClientInterface $telegram)
     {
@@ -61,10 +61,10 @@ class StartPullCommand extends Command
      *
      * @return null|int null or 0 if everything went fine, or an error code
      *
-     * @see setCode()
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
+        throw new \Exception('Not implemented');
     }
 }

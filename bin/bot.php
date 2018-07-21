@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use Sokil\TelegramBot\Console\Application;
+use Sokil\TelegramBot\Service\Console\Application;
 
 // find and load autoloader
 $autoloadPathList = array(
@@ -31,4 +31,3 @@ if ($projectDir === null) {
 // run app
 $application = new Application($projectDir);
 $application->run();
-

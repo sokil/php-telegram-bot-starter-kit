@@ -10,7 +10,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sokil\TelegramBot\Console\Command;
+namespace Sokil\TelegramBot\ConsoleCommand;
 
 use React\EventLoop\LoopInterface;
 use Sokil\TelegramBot\Service\HttpServer\HttpServer;

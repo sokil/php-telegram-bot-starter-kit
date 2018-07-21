@@ -10,7 +10,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sokil\TelegramBot\Console;
+namespace Sokil\TelegramBot\Service\Console;
 
 use Sokil\TelegramBot\Service\ConversationManager\DependencyInjection\CompilerPass\ConversationLocatorPass;
 use Sokil\TelegramBot\Service\Logger\ConsoleLogger;
@@ -121,7 +121,7 @@ class Application
                 new FileLocator($this->projectDir . '/src/Config/Service')
             );
 
-            $serviceConfigLoader->load('commands.yml');
+            $serviceConfigLoader->load('consoleCommands.yml');
             $serviceConfigLoader->load('common.yml');
             $serviceConfigLoader->load('conversation.yml');
             $serviceConfigLoader->load('router.yml');
