@@ -12,7 +12,9 @@ services:
     public: false
     arguments:
       - [] # conversations collection
+      - '@Sokil\TelegramBot\Service\ConversationManager\ConversationCollection\ConversationCollectionInterface'
       - '@service_container'
+      - '@Symfony\Component\Workflow\Registry'
 
   Sokil\TelegramBot\Service\ConversationManager\ConversationCollection\ConversationCollectionInterface:
     class: Sokil\TelegramBot\Service\ConversationManager\ConversationCollection\InMemoryConversationCollection

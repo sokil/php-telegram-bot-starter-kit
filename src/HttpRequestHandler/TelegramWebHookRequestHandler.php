@@ -17,12 +17,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use React\Http\Response;
-use Sokil\TelegramBot\Service\ConversationManager\ConversationCollection\ConversationCollectionInterface;
 use Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher;
 use Sokil\TelegramBot\Service\TelegramBotClient\TelegramBotClientInterface;
-use Sokil\TelegramBot\Service\ConversationManager\ConversationCollection\InMemoryConversationCollection;
-use Symfony\Component\Workflow\Exception\InvalidArgumentException;
-use Symfony\Component\Workflow\Registry as WorkflowRegistry;
 
 /**
  * Handler for requests from Telegram
@@ -35,19 +31,9 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
     private $telegramBotClient;
 
     /**
-     * @var ConversationCollectionInterface
-     */
-    private $conversationCollection;
-
-    /**
      * @var ConversationDispatcher
      */
     private $conversationDispatcher;
-
-    /**
-     * @var WorkflowRegistry
-     */
-    private $workflowRegistry;
 
     /**
      * @var LoggerInterfaces
@@ -57,20 +43,14 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
     /**
      * @param TelegramBotClientInterface $telegramBotClient
      * @param ConversationDispatcher $conversationDispatcher
-     * @param ConversationCollectionInterface $conversationCollection
-     * @param WorkflowRegistry $workflowRegistry
      */
     public function __construct(
         TelegramBotClientInterface $telegramBotClient,
         ConversationDispatcher $conversationDispatcher,
-        ConversationCollectionInterface $conversationCollection,
-        WorkflowRegistry $workflowRegistry,
         LoggerInterface $logger
     ) {
         $this->telegramBotClient = $telegramBotClient;
         $this->conversationDispatcher = $conversationDispatcher;
-        $this->conversationCollection = $conversationCollection;
-        $this->workflowRegistry = $workflowRegistry;
         $this->logger = $logger;
     }
 
@@ -91,7 +71,6 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
             ]
         );
 
-
         // handle request
         try {
             // parse JSON
@@ -103,53 +82,8 @@ class TelegramWebHookRequestHandler implements RequestHandlerInterface
             // build update from request
             $update = $this->telegramBotClient->buildWebHookUpdateFromRequest($updateData);
 
-            $userId = $update->getMessage()->getFrom()->getId();
-            $messageText = $update->getMessage()->getText();
-
-            // handle only textual messages
-            if ($messageText !== null) {
-                // try to get already started conversation
-                $conversation = $this->conversationCollection->getByUserId($userId);
-
-                // no conversation found, try to init new conversation if detected initial message
-                if ($conversation === null) {
-                    $conversation = $this->conversationDispatcher->dispatchConversation($messageText);
-                    if ($conversation !== null) {
-                        $this->conversationCollection->add($userId, $conversation);
-                    }
-                }
-
-                // route request to related command handler
-                if ($conversation !== null) {
-                    // apply update for conversation
-                    $nextState = $conversation->apply($update);
-
-                    // get workflow for conversation
-                    try {
-                        $workflow = $this->workflowRegistry->get($conversation);
-                    } catch (InvalidArgumentException $e) {
-                        $workflow = null;
-                    }
-
-                    // apply workflow logic if present, or finish command execution
-                    if ($workflow !== null) {
-                        // apply new state for conversation
-                        if (!empty($nextState) && $workflow->can($conversation, $nextState)) {
-                            $workflow->apply($conversation, $nextState);
-                        }
-
-                        // if conversation finished remove it from collection
-                        if (count($workflow->getEnabledTransitions($conversation)) === 0) {
-                            $this->conversationCollection->remove($userId);
-                        }
-                    } else {
-                        // finish command execution
-                        $this->conversationCollection->remove($userId);
-                    }
-                }
-            } else {
-                $this->logger->debug('[TelegramWebHookRequestHandler] Skip handling not textual message');
-            }
+            // dispatch update
+            $this->conversationDispatcher->dispatchConversation($update);
 
             // build response
             return new Response(200);

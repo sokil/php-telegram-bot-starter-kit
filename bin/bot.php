@@ -12,6 +12,7 @@ $autoloadPathList = array(
 );
 
 // locate project dir and run autoloader
+$projectDir = null;
 foreach ($autoloadPathList as $autoloadPath) {
     if (file_exists($autoloadPath)) {
         // define root of project
@@ -20,6 +21,11 @@ foreach ($autoloadPathList as $autoloadPath) {
         require_once $autoloadPath;
         break;
     }
+}
+
+// handle error about not installed project
+if ($projectDir === null) {
+    echo 'Please, install composer dependencies...';
 }
 
 // run app

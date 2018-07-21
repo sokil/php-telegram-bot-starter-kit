@@ -1,6 +1,6 @@
 conversations:
   Sokil\TelegramBot\Conversation\WhoAmIConversation:
-    command: "/whoami"
+    command: "whoami"
 
   Sokil\TelegramBot\Conversation\HelpConversation:
-    command: "/help"
+    command: "help"

@@ -1,3 +1,3 @@
-## Telegram Bot Starter Kit
+*Telegram Bot Starter Kit*
 
 Tool to easily build conversational bots.

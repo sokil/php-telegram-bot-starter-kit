@@ -9,6 +9,9 @@ services:
     autoconfigure: true
     public: false
 
+  ####################################################################
+  # Routing requests to controller                                   #
+  ####################################################################
   router.config_file_loader:
     class: Symfony\Component\Routing\Loader\YamlFileLoader
     arguments:
@@ -32,19 +35,27 @@ services:
       - {cache_dir: '%kernel.cache_dir%/'}
       - '@router.request_context'
 
-  request_handler.locator:
-    class: Symfony\Component\DependencyInjection\ServiceLocator
-    tags: ['container.service_locator']
-    arguments:
-      -
-        Sokil\TelegramBot\HttpRequestHandler\TelegramWebHookRequestHandler: '@Sokil\TelegramBot\HttpRequestHandler\TelegramWebHookRequestHandler'
-
+  ####################################################################
+  # HTTP server and locator of HTTP request handlers (controllers)   #
+  ####################################################################
   Sokil\TelegramBot\Service\HttpServer\HttpServer:
     class: Sokil\TelegramBot\Service\HttpServer\HttpServer
     arguments:
       - '@event_loop'
       - '@router'
-      - '@request_handler.locator'
+      - '@http_request_handler.locator'
 
+  http_request_handler.locator:
+    class: Symfony\Component\DependencyInjection\ServiceLocator
+    tags: ['container.service_locator']
+    arguments:
+      # map HTTP request handler class name to it's service id
+      -
+        Sokil\TelegramBot\HttpRequestHandler\TelegramWebHookRequestHandler: '@Sokil\TelegramBot\HttpRequestHandler\TelegramWebHookRequestHandler'
+
+  ####################################################################
+  # Collection of HTTP request handlers, located by                  #
+  # http_request_handler.locator                                     #
+  ####################################################################
   Sokil\TelegramBot\HttpRequestHandler\:
     resource: '../../HttpRequestHandler'
