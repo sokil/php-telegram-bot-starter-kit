@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Sokil\TelegramBot\Service\ConversationManager\DependencyInjection\CompilerPass;
 
 use Sokil\TelegramBot\Service\ConversationManager\ConversationDispatcher;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Parser as YamlParser;
@@ -25,8 +26,14 @@ class ConversationLocatorPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        $fileLocator = new FileLocator([
+            $container->getParameterBag()->get('project.config_dir'),
+            $container->getParameterBag()->get('kernel.config_dir'),
+        ]);
+
+        $yamlConfigPath = $fileLocator->locate('conversations.yml');
+
         // read yaml config
-        $yamlConfigPath = $container->getParameterBag()->get('project.config_dir') . '/conversations.yml';
         $yamlParser = new YamlParser();
         $config = $yamlParser->parseFile(
             $yamlConfigPath,

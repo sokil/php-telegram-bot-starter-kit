@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Sokil\TelegramBot\Service\Workflow\DependencyInjection\CompilerPass;
 
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -34,8 +35,15 @@ class WorkflowBuildCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
+        // locate config
+        $fileLocator = new FileLocator([
+            $container->getParameterBag()->get('project.config_dir'),
+            $container->getParameterBag()->get('kernel.config_dir'),
+        ]);
+
+        $yamlConfigPath = $fileLocator->locate('workflows.yml');
+
         // read yaml config
-        $yamlConfigPath = $container->getParameterBag()->get('project.config_dir') . '/workflows.yml';
         $yamlParser = new YamlParser();
         $config = $yamlParser->parseFile(
             $yamlConfigPath,
