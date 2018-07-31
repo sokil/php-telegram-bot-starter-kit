@@ -4,7 +4,7 @@ Fully featured infrastructure to organize your telegram bot. Just add your dialo
 
 ## Installation
 
-### As project:
+### As project
 
 This gives you full control over bot code, but upgrade will be difficult.
 
