@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "3fd4672ab4fb546bee5b7edb0822fe4b",
@@ -100,12 +100,12 @@
             "version": "v1.3.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/google/google-auth-library-php.git",
+                "url": "https://github.com/googleapis/google-auth-library-php.git",
                 "reference": "1af6b99470d73d61eb51e5c5265f1b51970606cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/google-auth-library-php/zipball/1af6b99470d73d61eb51e5c5265f1b51970606cf",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/1af6b99470d73d61eb51e5c5265f1b51970606cf",
                 "reference": "1af6b99470d73d61eb51e5c5265f1b51970606cf",
                 "shasum": ""
             },
@@ -147,12 +147,12 @@
             "version": "v0.3.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/GoogleCloudPlatform/google-cloud-php-dialogflow.git",
+                "url": "https://github.com/googleapis/google-cloud-php-dialogflow.git",
                 "reference": "e52f03db485281720fb389c1bf31058a3ec707ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GoogleCloudPlatform/google-cloud-php-dialogflow/zipball/e52f03db485281720fb389c1bf31058a3ec707ee",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-dialogflow/zipball/e52f03db485281720fb389c1bf31058a3ec707ee",
                 "reference": "e52f03db485281720fb389c1bf31058a3ec707ee",
                 "shasum": ""
             },
@@ -246,13 +246,13 @@
             "version": "v3.6.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/google/protobuf.git",
-                "reference": "ce044817c7ba0aea27c3fd8e496635d94d20a755"
+                "url": "https://github.com/protocolbuffers/protobuf-php.git",
+                "reference": "54f4f5ea45d06f04ef7f9296ad2db84977ce6dc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/google/protobuf/zipball/ce044817c7ba0aea27c3fd8e496635d94d20a755",
-                "reference": "ce044817c7ba0aea27c3fd8e496635d94d20a755",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/54f4f5ea45d06f04ef7f9296ad2db84977ce6dc3",
+                "reference": "54f4f5ea45d06f04ef7f9296ad2db84977ce6dc3",
                 "shasum": ""
             },
             "require": {
@@ -267,8 +267,8 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Google\\Protobuf\\": "php/src/Google/Protobuf",
-                    "GPBMetadata\\Google\\Protobuf\\": "php/src/GPBMetadata/Google/Protobuf"
+                    "Google\\Protobuf\\": "src/Google/Protobuf",
+                    "GPBMetadata\\Google\\Protobuf\\": "src/GPBMetadata/Google/Protobuf"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -280,7 +280,7 @@
             "keywords": [
                 "proto"
             ],
-            "time": "2018-06-08T01:16:44+00:00"
+            "time": "2019-02-25T22:48:20+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -1590,16 +1590,16 @@
         },
         {
             "name": "symfony/dependency-injection",
-            "version": "v4.1.1",
+            "version": "v4.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dependency-injection.git",
-                "reference": "e761828a85d7dfc00b927f94ccbe1851ce0b6535"
+                "reference": "919a245e0642afa353a333d8bf3352320af85969"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/e761828a85d7dfc00b927f94ccbe1851ce0b6535",
-                "reference": "e761828a85d7dfc00b927f94ccbe1851ce0b6535",
+                "url": "https://api.github.com/repos/symfony/dependency-injection/zipball/919a245e0642afa353a333d8bf3352320af85969",
+                "reference": "919a245e0642afa353a333d8bf3352320af85969",
                 "shasum": ""
             },
             "require": {
@@ -1657,7 +1657,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2018-06-25T11:12:43+00:00"
+            "time": "2019-04-16T11:21:55+00:00"
         },
         {
             "name": "symfony/dotenv",
